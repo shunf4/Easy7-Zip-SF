@@ -1,5 +1,13 @@
-# Git archive of 7-zip releases
+# Jame's Easy-Zip *almost* (continued)
 
-Because 7-zip [doesn't](https://github.com/7z) have a public repository, and their code is released only as archives on SourceForge, I maintain a git-ified copy here.
+I really like James Hoo's branch of the 7-zip utility.  It has features that have repeatedly been begged for, but haven't been implemented by Igor Pavlov.  The man is nothing but dedicated towards making things smaller, but he has no interest in UI.
 
-The [tagged releases](https://github.com/pornel/7z/releases) and the [original branch](https://github.com/pornel/7z/tree/original) contain pure 7-zip releases, without any modifications like this readme.
+This branch implements:
+
+- Deleting archives after extraction.
+- Recalling/Storing output history 
+- Icons in the context menu
+- Opening the output folder after extraction.
+
+There are some missing features from [Jame's 16.05 version](http://www.e7z.org/), namely the second about Easy-7zip dialog.
+
