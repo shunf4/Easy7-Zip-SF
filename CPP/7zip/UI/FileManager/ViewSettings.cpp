@@ -30,6 +30,8 @@ static LPCTSTR const kListMode = TEXT("ListMode");
 static LPCTSTR const kFolderHistoryValueName = TEXT("FolderHistory");
 static LPCTSTR const kFastFoldersValueName = TEXT("FolderShortcuts");
 static LPCTSTR const kCopyHistoryValueName = TEXT("CopyHistory");
+static LPCTSTR const kOpenOutputFolderValueName = TEXT("OpenOutputFolder");
+static LPCTSTR const kClose7ZipValueName = TEXT("Close7Zip");
 
 static NSynchronization::CCriticalSection g_CS;
 
@@ -310,4 +312,40 @@ void AddUniqueStringToHeadOfList(UStringVector &list, const UString &s)
     else
       i++;
   list.Insert(0, s);
+}
+
+void SaveOptOpenOutputFolder(bool bOpen)
+{
+  CKey key;
+  key.Create(HKEY_CURRENT_USER, kCUBasePath);
+  key.SetValue(kOpenOutputFolderValueName, bOpen);
+}
+
+bool ReadOptOpenOutputFolder()
+{
+  CKey key;
+  if (key.Open(HKEY_CURRENT_USER, kCUBasePath, KEY_READ) != ERROR_SUCCESS)
+    return false;
+  bool bOpen;
+  if (key.QueryValue(kOpenOutputFolderValueName, bOpen) != ERROR_SUCCESS)
+    return false;
+  return bOpen;
+}
+
+void SaveOptClose7Zip(bool bClose7Zip)
+{
+  CKey key;
+  key.Create(HKEY_CURRENT_USER, kCUBasePath);
+  key.SetValue(kClose7ZipValueName, bClose7Zip);
+}
+
+bool ReadOptClose7Zip()
+{
+  CKey key;
+  if (key.Open(HKEY_CURRENT_USER, kCUBasePath, KEY_READ) != ERROR_SUCCESS)
+    return false;
+  bool bOpen;
+  if (key.QueryValue(kClose7ZipValueName, bOpen) != ERROR_SUCCESS)
+    return false;
+  return bOpen;
 }

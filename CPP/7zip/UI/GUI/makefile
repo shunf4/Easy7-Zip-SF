@@ -119,6 +119,7 @@ FM_OBJS = \
   $O\OverwriteDialog.obj \
   $O\PasswordDialog.obj \
   $O\ProgressDialog2.obj \
+  $O\ViewSettings.obj
 
 FM_OBJS = $(FM_OBJS) \
   $O\BrowseDialog.obj \
