@@ -1,5 +1,5 @@
 @echo off
-set OPTS=CPU=AMD64 MY_STATIC_LINK=1 _SFX=1 PLATFORM=x64
+set OPTS=_SFX=1 PLATFORM=x64
 set LFLAGS=/DEBUG /SUBSYSTEM:WINDOWS,"5.02"
 
 @echo   ^_^_^_^_^_ ^_ ^_      ^_^_  ^_^_
@@ -127,6 +127,5 @@ nmake %OPTS%
 IF %errorlevel% NEQ 0 echo "Error x64 @ 7z.dll" >> errorfile.txt
 popd
 
-cd /d %~dp0out
-powershell -Command "& { Copy-Item .\*\*.exe,.\*\*.dll,.\*\*.lib,.\*\*.pdb -Destination . }"
+powershell -Command Copy-Item .\out\*\*.exe,.\out\*\*.dll,.\out\*\*.pdb,.\out\*\*.sfx -Destination .\out\ -Verbose -Force
 explorer.exe %~dp0out

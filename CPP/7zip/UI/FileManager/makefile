@@ -14,7 +14,7 @@ COMMON_OBJS = \
   $O\StringConvert.obj \
   $O\StringToInt.obj \
   $O\UTFConvert.obj \
-  $O\Wildcard.obj \
+  $O\Wildcard.obj
 
 WIN_OBJS = $(WIN_OBJS) \
   $O\Clipboard.obj \
