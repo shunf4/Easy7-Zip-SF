@@ -293,15 +293,29 @@ struct CHashCommand
 
 static const CHashCommand g_HashCommands[] =
 {
-  { CZipContextMenu::kHash_CRC32,  "CRC-32",  "CRC32" },
-  { CZipContextMenu::kHash_CRC64,  "CRC-64",  "CRC64" },
-  { CZipContextMenu::kHash_SHA1,   "SHA-1",   "SHA1" },
-  { CZipContextMenu::kHash_SHA256, "SHA-256", "SHA256" },
+  { CZipContextMenu::kHash_CRC32,    "CRC-32",   "CRC32" },
+  { CZipContextMenu::kHash_CRC64,    "CRC-64",   "CRC64" },
+  { CZipContextMenu::kHash_XXH32,    "XXH-32 (NOT WORKING)",   "XXH32 (NOT WORKING)" },
+  { CZipContextMenu::kHash_XXH64,    "XXH-64 (NOT WORKING)",   "XXH64 (NOT WORKING)" },
+  { CZipContextMenu::kHash_MD5,      "MD2",      "MD2" },
+  { CZipContextMenu::kHash_MD5,      "MD4",      "MD4" },
+  { CZipContextMenu::kHash_MD5,      "MD5",      "MD5" },
+  { CZipContextMenu::kHash_SHA1,     "SHA-1",    "SHA1" },
+  { CZipContextMenu::kHash_SHA256,   "SHA2-256", "SHA256" },
+  { CZipContextMenu::kHash_SHA384,   "SHA2-384", "SHA384" },
+  { CZipContextMenu::kHash_SHA512,   "SHA2-512", "SHA512" },
+  { CZipContextMenu::kHash_BLAKE2sp, "BLAKE2sp", "BLAKE2sp" },
+  { CZipContextMenu::kHash_SHA256,   "SHA3-256", "SHA3-256" },
+  { CZipContextMenu::kHash_SHA384,   "SHA3-384", "SHA3-384" },
+  { CZipContextMenu::kHash_SHA512,   "SHA3-512", "SHA3-512" },
+  { CZipContextMenu::kHash_BLAKE3,   "BLAKE3",   "BLAKE3" },
+  { CZipContextMenu::kHash_SHA256,   "SHA3-256", "SHA3-256" },
+  { CZipContextMenu::kHash_SHA384,   "SHA3-384", "SHA3-384" },
+  { CZipContextMenu::kHash_SHA512,   "SHA3-512", "SHA3-512" },
   { CZipContextMenu::kHash_All,    "*",       "*" },
-  { CZipContextMenu::kHash_Generate_SHA256, "SHA-256 -> file.sha256", "SHA256" },
+  { CZipContextMenu::kHash_Generate_SHA256, "SHA2-256 -> file.sha256", "SHA256" },
   { CZipContextMenu::kHash_TestArc, "Checksum : Test", "Hash" }
 };
-
 
 static int FindCommand(CZipContextMenu::enum_CommandInternalID &id)
 {
@@ -1104,7 +1118,7 @@ Z7_COMWF_B CZipContextMenu::QueryContextMenu(HMENU hMenu, UINT indexMenu,
           showName += ".sha256";
           cmi.Folder = fs2us(folderPrefix);
           cmi.ArcName = name;
-          s = "SHA-256 -> ";
+          s = "SHA2-256 -> ";
           s += showName;
         }
         else if (hc.CommandInternalID == kHash_TestArc)
@@ -1332,8 +1346,20 @@ HRESULT CZipContextMenu::InvokeCommandCommon(const CCommandMapItem &cmi)
       
       case kHash_CRC32:
       case kHash_CRC64:
+      case kHash_XXH32:
+      case kHash_XXH64:
+      case kHash_MD2:
+      case kHash_MD4:
+      case kHash_MD5:
       case kHash_SHA1:
       case kHash_SHA256:
+      case kHash_SHA384:
+      case kHash_SHA512:
+      case kHash_BLAKE2sp:
+      case kHash_SHA3_256:
+      case kHash_SHA3_384:
+      case kHash_SHA3_512:
+      case kHash_BLAKE3:
       case kHash_All:
       case kHash_Generate_SHA256:
       case kHash_TestArc:

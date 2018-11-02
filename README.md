@@ -26,3 +26,5 @@ print message in a dialog
     MessageBoxA(0, a, "AAA", MB_ICONERROR);
 }
 ```
+
+build.cmd seems not noticing changes that involves only header files; ensure clean/change all related .cpp files before build, if a header is changed

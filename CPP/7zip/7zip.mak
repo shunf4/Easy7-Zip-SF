@@ -27,6 +27,7 @@ OBJS = \
   $(COMPRESS_OBJS) \
   $(CRYPTO_OBJS) \
   $(C_OBJS) \
+  $(HASHES_OBJS) \
   $(ASM_OBJS) \
   $O\resource.res \
 
@@ -234,6 +235,8 @@ $(C_OBJS): ../../../../C/$(*B).c
 	$(COMPLB_O2)
 {../../../../C}.c{$O}.obj::
 	$(CCOMPLB)
+{../../../../C/hashes}.c{$O}.obj::
+	$(COMPLB_O2)
 
 !ENDIF
 
