@@ -35,11 +35,11 @@ static const UInt32 kLangIDs[] =
 CSysString CModifiedExtInfo::GetString() const
 {
   if (State == kExtState_7Zip)
-    return TEXT("7-Zip");
+    return AString("7-Zip");
   if (State == kExtState_Clear)
-    return TEXT("");
+    return AString("");
   if (Other7Zip)
-    return TEXT("[7-Zip]");
+    return AString("[7-Zip]");
   return ProgramKey;
 };
 

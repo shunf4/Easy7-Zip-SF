@@ -1,2 +1,11 @@
 *.o
 out
+7zAll/x64/
+*.pdb
+*.tlog
+*.obj
+*.user
+*.log
+*.pch
+*.idb
+x64/

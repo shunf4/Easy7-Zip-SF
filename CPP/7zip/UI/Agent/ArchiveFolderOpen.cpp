@@ -3,7 +3,7 @@
 #include "StdAfx.h"
 
 #include "../../../Windows/DLL.h"
-
+#include "../Common/LoadCodecs.h"
 #include "Agent.h"
 
 void CArchiveFolderManager::LoadFormats()
