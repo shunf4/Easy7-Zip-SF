@@ -21,6 +21,8 @@ COMMON_OBJS = \
   $O\UTFConvert.obj \
   $O\MyVector.obj \
   $O\Wildcard.obj \
+  $O\ResourceString.obj \
+  
 
 WIN_OBJS = \
   $O\DLL.obj \
@@ -37,6 +39,7 @@ WIN_OBJS = \
   $O\Registry.obj \
   $O\System.obj \
   $O\TimeUtils.obj \
+  $O\LoadCodecs.obj \
 
 7ZIP_COMMON_OBJS = \
   $O\CreateCoder.obj \

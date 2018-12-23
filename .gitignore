@@ -9,3 +9,10 @@ out
 *.pch
 *.idb
 x64/
+*.exe
+*.res
+*.dll
+*.lib
+*.exp
+*.sfx
+*.txt
