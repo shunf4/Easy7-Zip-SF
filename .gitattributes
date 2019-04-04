@@ -1,0 +1,13 @@
+# Set default behavior to automatically normalize line endings.
+* text=crlf
+
+# These files are text and should be normalized (Convert crlf => lf)
+
+*.txt text
+*.vcproj text
+*.cpp text
+*.h text
+*.def text
+*.rc text
+*.cmd
+

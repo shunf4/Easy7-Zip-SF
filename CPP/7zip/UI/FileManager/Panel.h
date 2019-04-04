@@ -198,7 +198,7 @@ enum MyMessages
 };
 
 UString GetFolderPath(IFolderFolder *folder);
-
+void StartApplicationDontWait(const UString &dir, const UString &path, HWND window);
 class CPanel;
 
 class CMyListView Z7_final: public NWindows::NControl::CListView2
@@ -849,6 +849,7 @@ public:
   void MessageBox_LastError() const;
   void MessageBox_Error_LangID(UINT resourceID) const;
   void MessageBox_Error_UnsupportOperation() const;
+  void MessageBoxMyError(LPCWSTR message);
   // void MessageBoxErrorForUpdate(HRESULT errorCode, UINT resourceID);
 
 

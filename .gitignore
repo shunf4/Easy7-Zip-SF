@@ -1,1 +1,7 @@
 *.o
+errorfile.txt
+*.user
+*.obj
+out/
+*.vcxproj
+*.db
