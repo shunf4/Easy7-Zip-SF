@@ -574,11 +574,11 @@ void CExtractDialog::ShowPathFreeSpace(UString & strPath)
 }
 
 
-bool CExtractDialog::OnCommand(int code, int itemID, LPARAM lParam)
+bool CExtractDialog::OnCommand(unsigned code, unsigned itemID, LPARAM lParam)
 {
 	if (itemID == IDC_EXTRACT_PATH)
 	{
-#ifdef NO_REGISTRY
+#ifdef Z7_NO_REGISTRY
 		if (code == EN_CHANGE)
 #else
 		if (code == CBN_EDITCHANGE)
@@ -590,7 +590,7 @@ bool CExtractDialog::OnCommand(int code, int itemID, LPARAM lParam)
 			ShowPathFreeSpace(strPath);
 			return true;
 		}
-#ifndef NO_REGISTRY
+#ifndef Z7_NO_REGISTRY
 		else if (code == CBN_SELCHANGE)
 		{
 			int nSel = _path.GetCurSel();

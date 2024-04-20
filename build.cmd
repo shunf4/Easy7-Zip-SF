@@ -1,5 +1,5 @@
 @echo off
-set OPTS=_SFX=1 PLATFORM=x64
+set OPTS=Z7_SFX=1 PLATFORM=x64
 set LFLAGS=/DEBUG /SUBSYSTEM:WINDOWS,"5.02"
 
 @echo   ^_^_^_^_^_ ^_ ^_      ^_^_  ^_^_
