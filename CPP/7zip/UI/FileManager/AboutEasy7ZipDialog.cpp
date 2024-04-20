@@ -18,7 +18,7 @@ void CAboutEasy7ZipDialog::OnHelp()
   ShowHelpWindow(kHelpTopic);
 }
 
-bool CAboutEasy7ZipDialog::OnButtonClicked(int buttonID, HWND buttonHWND)
+bool CAboutEasy7ZipDialog::OnButtonClicked(unsigned buttonID, HWND buttonHWND)
 {
   LPCTSTR url;
   switch(buttonID)
