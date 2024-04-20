@@ -306,7 +306,7 @@ void CPanel::Properties()
         }
       }
     }
-    ::MessageBoxW(*(this), message, LangString(IDS_PROPERTIES), MB_OK);
+    ::MessageBoxW(*(this), message, LangString(IDS_PROPERTIES), MB_OK | MB_ICONINFORMATION);
   }
 }
 

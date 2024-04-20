@@ -30,6 +30,9 @@ static const TCHAR *kFolderHistoryValueName = TEXT("FolderHistory");
 static const TCHAR *kFastFoldersValueName = TEXT("FolderShortcuts");
 static const TCHAR *kCopyHistoryValueName = TEXT("CopyHistory");
 
+static const TCHAR *kOpenOutputFolderValueName = TEXT("OpenOutputFolder");
+static const TCHAR *kClose7ZipValueName = TEXT("Close7Zip");
+
 static NSynchronization::CCriticalSection g_CS;
 
 #define Set32(p, v) SetUi32(((Byte *)p), v)
@@ -309,4 +312,40 @@ void AddUniqueStringToHeadOfList(UStringVector &list, const UString &s)
     else
       i++;
   list.Insert(0, s);
+}
+
+void SaveOptOpenOutputFolder(bool bOpen)
+{
+  CKey key;
+  key.Create(HKEY_CURRENT_USER, kCUBasePath);
+  key.SetValue(kOpenOutputFolderValueName, bOpen);
+}
+
+bool ReadOptOpenOutputFolder()
+{
+  CKey key;
+  if (key.Open(HKEY_CURRENT_USER, kCUBasePath, KEY_READ) != ERROR_SUCCESS)
+    return false;
+  bool bOpen;
+  if (key.QueryValue(kOpenOutputFolderValueName, bOpen) != ERROR_SUCCESS)
+    return false;
+  return bOpen;
+}
+
+void SaveOptClose7Zip(bool bClose7Zip)
+{
+  CKey key;
+  key.Create(HKEY_CURRENT_USER, kCUBasePath);
+  key.SetValue(kClose7ZipValueName, bClose7Zip);
+}
+
+bool ReadOptClose7Zip()
+{
+  CKey key;
+  if (key.Open(HKEY_CURRENT_USER, kCUBasePath, KEY_READ) != ERROR_SUCCESS)
+    return false;
+  bool bOpen;
+  if (key.QueryValue(kClose7ZipValueName, bOpen) != ERROR_SUCCESS)
+    return false;
+  return bOpen;
 }

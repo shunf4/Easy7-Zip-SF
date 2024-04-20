@@ -13,7 +13,7 @@ class CComboDialog: public NWindows::NControl::CModalDialog
   NWindows::NControl::CComboBox _comboBox;
   virtual void OnOK();
   virtual bool OnInit();
-  virtual bool OnSize(WPARAM wParam, int xSize, int ySize);
+//  virtual bool OnSize(WPARAM wParam, int xSize, int ySize);
 public:
   // bool Sorted;
   UString Title;

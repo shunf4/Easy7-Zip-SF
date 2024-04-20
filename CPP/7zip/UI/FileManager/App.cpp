@@ -37,6 +37,8 @@ using namespace NName;
 extern DWORD g_ComCtl32Version;
 extern HINSTANCE g_hInstance;
 
+extern bool g_bProcessError;
+
 static CFSTR kTempDirPrefix = FTEXT("7zE");
 
 void CPanelCallbackImp::OnTab()
@@ -542,6 +544,12 @@ UString CPanel::GetItemsInfoString(const CRecordVector<UInt32> &indices)
 
 bool IsCorrectFsName(const UString &name);
 
+static bool IsDirectory(LPCWSTR lpszPathFile)
+{
+	DWORD	dwAttr;
+	dwAttr = GetFileAttributesW(lpszPathFile);
+	return (dwAttr != (DWORD)-1) && ((dwAttr & FILE_ATTRIBUTE_DIRECTORY) != 0);
+}
 
 
 /* Returns true, if path is path that can be used as path for File System functions
@@ -578,6 +586,9 @@ void CApp::OnCopy(bool move, bool copyToSame, int srcPanelIndex)
 
   CRecordVector<UInt32> indices;
   UString destPath;
+  bool openOutputFolder;
+  bool deleteSourceFile;
+  bool close7Zip;
   bool useDestPanel = false;
 
   {
@@ -614,9 +625,14 @@ void CApp::OnCopy(bool move, bool copyToSame, int srcPanelIndex)
     LangString(move ? IDS_MOVE : IDS_COPY, copyDialog.Title);
     LangString(move ? IDS_MOVE_TO : IDS_COPY_TO, copyDialog.Static);
     copyDialog.Info = srcPanel.GetItemsInfoString(indices);
+	copyDialog.m_currentFolderPrefix = srcPanel._currentFolderPrefix;
 
     if (copyDialog.Create(srcPanel.GetParent()) != IDOK)
       return;
+
+	openOutputFolder = copyDialog.m_bOpenOutputFolder;
+	deleteSourceFile = copyDialog.m_bDeleteSourceFile;
+	close7Zip = copyDialog.m_bClose7Zip;
 
     destPath = copyDialog.Value;
   }
@@ -742,10 +758,12 @@ void CApp::OnCopy(bool move, bool copyToSame, int srcPanelIndex)
       useDestPanel = true;
 
     AddUniqueStringToHeadOfList(copyFolders, destPath);
-    while (copyFolders.Size() > 20)
+    while (copyFolders.Size() > 30)
       copyFolders.DeleteBack();
     SaveCopyHistory(copyFolders);
   }
+
+  g_bProcessError = false;
 
   bool useSrcPanel = !useDestPanel || !srcPanel.Is_IO_FS_Folder();
 
@@ -830,6 +848,62 @@ void CApp::OnCopy(bool move, bool copyToSame, int srcPanelIndex)
   disableNotify1.Restore();
   disableNotify2.Restore();
   srcPanel.SetFocusToList();
+
+  if (!g_bProcessError && result == S_OK)
+  {
+	  if (openOutputFolder && IsDirectory(destPath))
+	  {
+		StartApplicationDontWait(destPath, destPath, (HWND)_window);
+	  }
+	  if (deleteSourceFile)
+	  {
+		  DWORD	dwAttr;
+
+		  UString srcFilePath(srcPanel._currentFolderPrefix);
+		  srcPanel.OpenParentFolder();
+
+		  while (!srcFilePath.IsEmpty())
+		  {
+			  if (srcFilePath.Back() == '\\')
+			  {
+				  srcFilePath.DeleteBack();
+			  }
+			  dwAttr = GetFileAttributesW(srcFilePath);
+
+			  if (dwAttr == INVALID_FILE_ATTRIBUTES)
+			  {
+				  int n = srcFilePath.ReverseFind(L'\\');
+				  if (n != -1)
+				  {
+					  srcPanel.OpenParentFolder();
+					  srcFilePath.ReleaseBuf_SetEnd(n);
+				  }
+				  else
+				  {
+					  break;
+				  }
+			  }
+			  else if (dwAttr & FILE_ATTRIBUTE_ARCHIVE)
+			  {
+				  if (dwAttr & FILE_ATTRIBUTE_READONLY)
+				  {
+					  dwAttr &= (~FILE_ATTRIBUTE_READONLY);
+					  SetFileAttributesW(srcFilePath, dwAttr);
+				  }
+				  ::DeleteFileW(srcFilePath);
+				  break;
+			  }
+			  else //if (dwAttr & FILE_ATTRIBUTE_DIRECTORY)
+			  {
+				  break;
+			  }
+		  } // while
+	  }
+	  if (close7Zip)
+	  {
+        PostMessage (_window, WM_CLOSE, 0, 0);
+	  }
+  }
 }
 
 void CApp::OnSetSameFolder(int srcPanelIndex)

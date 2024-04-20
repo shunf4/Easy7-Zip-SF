@@ -15,6 +15,9 @@ class CListViewDialog: public NWindows::NControl::CModalDialog
   virtual bool OnInit();
   virtual bool OnSize(WPARAM wParam, int xSize, int ySize);
   virtual bool OnNotify(UINT controlID, LPNMHDR header);
+  bool OnGetMinMaxInfo(PMINMAXINFO pMMI);
+protected:
+	SIZE m_sizeMinWindow;
 public:
   UString Title;
   bool DeleteIsAllowed;
@@ -24,7 +27,8 @@ public:
 
   INT_PTR Create(HWND wndParent = 0) { return CModalDialog::Create(IDD_LISTVIEW, wndParent); }
 
-  CListViewDialog(): DeleteIsAllowed(false) {}
+  CListViewDialog(): DeleteIsAllowed(false) { m_sizeMinWindow.cx = 0; m_sizeMinWindow.cy = 0; }
+  virtual bool OnMessage(UINT message, WPARAM wParam, LPARAM lParam);
 };
 
 #endif

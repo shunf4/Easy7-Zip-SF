@@ -1,0 +1,32 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 10.00
+# Visual Studio 2008
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "SFXWin", "SFXWin.vcproj", "{F0A92034-14AA-4347-92D5-CD4886865506}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Win32 = Debug|Win32
+		Debug|x64 = Debug|x64
+		Release|Win32 = Release|Win32
+		Release|x64 = Release|x64
+		ReleaseD|Win32 = ReleaseD|Win32
+		ReleaseD|x64 = ReleaseD|x64
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{F0A92034-14AA-4347-92D5-CD4886865506}.Debug|Win32.ActiveCfg = Debug|Win32
+		{F0A92034-14AA-4347-92D5-CD4886865506}.Debug|Win32.Build.0 = Debug|Win32
+		{F0A92034-14AA-4347-92D5-CD4886865506}.Debug|x64.ActiveCfg = Debug|x64
+		{F0A92034-14AA-4347-92D5-CD4886865506}.Debug|x64.Build.0 = Debug|x64
+		{F0A92034-14AA-4347-92D5-CD4886865506}.Release|Win32.ActiveCfg = Release|Win32
+		{F0A92034-14AA-4347-92D5-CD4886865506}.Release|Win32.Build.0 = Release|Win32
+		{F0A92034-14AA-4347-92D5-CD4886865506}.Release|x64.ActiveCfg = Release|x64
+		{F0A92034-14AA-4347-92D5-CD4886865506}.Release|x64.Build.0 = Release|x64
+		{F0A92034-14AA-4347-92D5-CD4886865506}.ReleaseD|Win32.ActiveCfg = ReleaseD|Win32
+		{F0A92034-14AA-4347-92D5-CD4886865506}.ReleaseD|Win32.Build.0 = ReleaseD|Win32
+		{F0A92034-14AA-4347-92D5-CD4886865506}.ReleaseD|x64.ActiveCfg = ReleaseD|x64
+		{F0A92034-14AA-4347-92D5-CD4886865506}.ReleaseD|x64.Build.0 = ReleaseD|x64
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+EndGlobal
