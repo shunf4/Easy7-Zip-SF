@@ -496,23 +496,30 @@ static void AddPropValueToSum(IFolderFolder *folder, int index, PROPID propID, U
     sum = (UInt64)(Int64)-1;
 }
 
-UString CPanel::GetItemsInfoString(const CRecordVector<UInt32> &indices)
+UString CPanel::GetItemsInfoString(const CRecordVector<UInt32> &indices, int *soleDir)
 {
   UString info;
   UInt64 numDirs, numFiles, filesSize, foldersSize;
   numDirs = numFiles = filesSize = foldersSize = 0;
   
   unsigned i;
+  *soleDir = 0;
   for (i = 0; i < indices.Size(); i++)
   {
     int index = indices[i];
     if (IsItem_Folder(index))
     {
+      if (i == 0) {
+        *soleDir = 1;
+      } else {
+        *soleDir = 0;
+      }
       AddPropValueToSum(_folder, index, kpidSize, foldersSize);
       numDirs++;
     }
     else
     {
+      *soleDir = 0;
       AddPropValueToSum(_folder, index, kpidSize, filesSize);
       numFiles++;
     }
@@ -629,7 +636,7 @@ void CApp::OnCopy(bool move, bool copyToSame, int srcPanelIndex)
     copyDialog.Value = destPath;
     LangString(move ? IDS_MOVE : IDS_COPY, copyDialog.Title);
     LangString(move ? IDS_MOVE_TO : IDS_COPY_TO, copyDialog.Static);
-    copyDialog.Info = srcPanel.GetItemsInfoString(indices);
+    copyDialog.Info = srcPanel.GetItemsInfoString(indices, &copyDialog.soleDir);
 	copyDialog.m_currentFolderPrefix = srcPanel._currentFolderPrefix;
 
     if (copyDialog.Create(srcPanel.GetParent()) != IDOK)
