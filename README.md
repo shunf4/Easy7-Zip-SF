@@ -1,5 +1,7 @@
-# Git archive of 7-zip releases
+This is [Jame Hoo's Easy 7-Zip]([rebased on 7-zip's latest release](http://www.e7z.org/)) (Additional Ergonomic & Useful GUI Enhancements and Improvements) , rebased on 7-zip's latest release. This is based on [glachancecmaisonneuve's previous effort of rebasing it on 19.00](https://github.com/glachancecmaisonneuve/Easy7-Zip), though some original features from James Hoo are missing.
 
-Because 7-zip [doesn't](https://github.com/7z) have a public repository, and their code is released only as archives on SourceForge, I maintain a git-ified copy here.
+Related:
 
-The [tagged releases](https://github.com/pornel/7z/releases) and the [original branch](https://github.com/pornel/7z/tree/original) contain pure 7-zip releases, without any modifications like this readme.
+- http://www.e7z.org/
+- https://github.com/glachancecmaisonneuve/Easy7-Zip
+- https://github.com/treysis/Easy-7-Zip-ZS
