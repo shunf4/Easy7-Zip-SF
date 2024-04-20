@@ -1,0 +1,38 @@
+name: Build and Upload Artifact
+
+on:
+  push:
+    branches:
+      - easy7zip-sf
+  pull_request:
+    branches:
+      - easy7zip-sf
+
+jobs:
+  build:
+    runs-on: windows-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v2
+
+      - name: Build project
+        shell: cmd
+        run: ${{ '"C:\Program Files\Microsoft Visual Studio\2022\Enterprise\VC\Auxiliary\Build\vcvars64.bat" && build.cmd' }}
+
+      - name: Download and unpack Lang
+        shell: cmd
+        run: ${{ 'cd out && curl -L -o official.exe.7z "https://sourceforge.net/projects/sevenzip/files/latest/download" && .\7z x official.exe.7z Lang/ License.txt && DEL official.exe.7z' }}
+
+      - name: Pack
+        shell: cmd
+        run: ${{ 'cd out && COPY 7zipUninstall.exe Uninstall.exe && .\7z a -m0=LZMA -mx=9 install.7z Lang/ 7z.dll 7z.exe 7z.sfx 7zCon.sfx 7zFM.exe 7zG.exe 7-zip.dll Uninstall.exe License.txt && RENAME 7zipInstall.exe 7zipInstall.exe.bak && COPY /Y /B 7zipInstall.exe.bak + install.7z 7zipInstall.exe && DEL Uninstall.exe && DEL install.7z' }}
+
+      - name: Upload artifact
+        uses: actions/upload-artifact@v2
+        with:
+          name: Easy_7zip_Artifact
+          # Exclude directories
+          path: |
+            ./out/*
+            !./out/*/*

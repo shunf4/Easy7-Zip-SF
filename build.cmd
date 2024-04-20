@@ -129,3 +129,6 @@ popd
 
 powershell -Command Copy-Item .\out\*\*.exe,.\out\*\*.dll,.\out\*\*.pdb,.\out\*\*.sfx -Destination .\out\ -Verbose -Force
 explorer.exe %~dp0out
+
+rem clear errorlevel
+type nul
