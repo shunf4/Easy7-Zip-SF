@@ -107,6 +107,9 @@ bool CCopyDialog::OnInit()
 		  }
 	  }
   }
+  if (soleDir == 0) {
+	OnButtonAddFileName();
+  }
   return CModalDialog::OnInit();
 }
 
@@ -265,6 +268,8 @@ void CCopyDialog::OnButtonAddFileName()
 		currentPath += m_strRealFileName;
 
 		_path.SetText(currentPath);
+	} else {
+		_path.SetText(currentPath.Mid(0, n));
 	}
 	_path.SetFocus();
 }

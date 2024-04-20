@@ -30,13 +30,16 @@ protected:
 	SIZE m_sizeMinWindow;
 
 public:
-  CCopyDialog(): m_bOpenOutputFolder(false), m_bDeleteSourceFile(false), m_bClose7Zip (false) { m_sizeMinWindow.cx = 0; m_sizeMinWindow.cy = 0; }
+  // soleDir=2: undecided
+  CCopyDialog(): soleDir(2), m_bOpenOutputFolder(false), m_bDeleteSourceFile(false), m_bClose7Zip (false) { m_sizeMinWindow.cx = 0; m_sizeMinWindow.cy = 0; }
 
   UString Title;
   UString Static;
   UString Value;
   UString Info;
   UStringVector Strings;
+
+  int soleDir;
 
   bool m_bOpenOutputFolder;
   bool m_bDeleteSourceFile;
