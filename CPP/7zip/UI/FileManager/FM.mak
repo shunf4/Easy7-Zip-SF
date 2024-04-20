@@ -57,6 +57,7 @@ FM_OBJS = \
   $O\UpdateCallback100.obj \
   $O\ViewSettings.obj \
   $O\AboutDialog.obj \
+  $O\AboutEasy7ZipDialog.obj \
   $O\ComboDialog.obj \
   $O\CopyDialog.obj \
   $O\EditDialog.obj \

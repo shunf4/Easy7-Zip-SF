@@ -22,8 +22,10 @@ static NSynchronization::CCriticalSection g_CS;
 #define CS_LOCK NSynchronization::CCriticalSectionLock lock(g_CS);
 
 static LPCTSTR const kCuPrefix = TEXT("Software") TEXT(STRING_PATH_SEPARATOR) TEXT("7-Zip-Zstandard") TEXT(STRING_PATH_SEPARATOR);
+static LPCTSTR const kCuFMPrefix = TEXT("Software") TEXT(STRING_PATH_SEPARATOR) TEXT("7-Zip") TEXT(STRING_PATH_SEPARATOR) TEXT("FM");
 
 static CSysString GetKeyPath(LPCTSTR path) { return kCuPrefix + (CSysString)path; }
+static CSysString GetFMKeyPath() { return kCuFMPrefix; }
 
 static LONG OpenMainKey(CKey &key, LPCTSTR keyName)
 {
@@ -33,6 +35,16 @@ static LONG OpenMainKey(CKey &key, LPCTSTR keyName)
 static LONG CreateMainKey(CKey &key, LPCTSTR keyName)
 {
   return key.Create(HKEY_CURRENT_USER, GetKeyPath(keyName));
+}
+
+static LONG OpenFMKey(CKey &key)
+{
+  return key.Open(HKEY_CURRENT_USER, GetFMKeyPath(), KEY_READ);
+}
+
+static LONG CreateFMKey(CKey &key)
+{
+  return key.Create(HKEY_CURRENT_USER, GetFMKeyPath());
 }
 
 static void Key_Set_UInt32(CKey &key, LPCTSTR name, UInt32 value)
@@ -100,6 +112,8 @@ static LPCTSTR const kElimDup = TEXT("ElimDup");
 // static LPCTSTR const kAltStreams = TEXT("AltStreams");
 static LPCTSTR const kNtSecur = TEXT("Security");
 
+static LPCTSTR const kFMCopyHistoryValueName = TEXT("CopyHistory");
+
 void CInfo::Save() const
 {
   CS_LOCK
@@ -118,11 +132,18 @@ void CInfo::Save() const
   Key_Set_BoolPair(key, kNtSecur, NtSecurity);
   Key_Set_BoolPair(key, kShowPassword, ShowPassword);
 
-  key.RecurseDeleteKey(kPathHistory);
-  if (WantPathHistory())
-    key.SetValue_Strings(kPathHistory, Paths);
-  else
-    key.SetValue_Strings(kPathHistory, Empty);
+//  key.RecurseDeleteKey(kPathHistory);
+//  if (WantPathHistory())
+  //  key.SetValue_Strings(kPathHistory, Paths);
+  // else
+  //  key.SetValue_Strings(kPathHistory, Empty);
+  key.Close();
+
+  if (CreateFMKey(key) == ERROR_SUCCESS)
+  {
+    key.SetValue_Strings(kFMCopyHistoryValueName, Paths);
+    key.Close();
+  }
 }
 
 void Save_ShowPassword(bool showPassword)
@@ -146,28 +167,37 @@ void CInfo::Load()
 
   CS_LOCK
   CKey key;
-  if (OpenMainKey(key, kKeyName) != ERROR_SUCCESS)
-    return;
+//  if (OpenMainKey(key, kKeyName) != ERROR_SUCCESS)
+//    return;
   
-  key.GetValue_Strings(kPathHistory, Paths);
-  UInt32 v;
-  if (key.QueryValue(kExtractMode, v) == ERROR_SUCCESS && v <= NPathMode::kAbsPaths)
+  if (OpenMainKey(key, kKeyName) == ERROR_SUCCESS)
   {
-    PathMode = (NPathMode::EEnum)v;
-    PathMode_Force = true;
+//	  key.GetValue_Strings(kPathHistory, Paths);
+	  UInt32 v;
+	  if (key.QueryValue(kExtractMode, v) == ERROR_SUCCESS && v <= NPathMode::kAbsPaths)
+	  {
+		PathMode = (NPathMode::EEnum)v;
+		PathMode_Force = true;
+	  }
+	  if (key.QueryValue(kOverwriteMode, v) == ERROR_SUCCESS && v <= NOverwriteMode::kRenameExisting)
+	  {
+		OverwriteMode = (NOverwriteMode::EEnum)v;
+		OverwriteMode_Force = true;
+	  }
+
+	  Key_Get_BoolPair_true(key, kSplitDest, SplitDest);
+
+	  Key_Get_BoolPair(key, kElimDup, ElimDup);
+	  // Key_Get_BoolPair(key, kAltStreams, AltStreams);
+	  Key_Get_BoolPair(key, kNtSecur, NtSecurity);
+	  Key_Get_BoolPair(key, kShowPassword, ShowPassword);
+	  key.Close();
   }
-  if (key.QueryValue(kOverwriteMode, v) == ERROR_SUCCESS && v <= NOverwriteMode::kRenameExisting)
+  if (OpenFMKey(key) == ERROR_SUCCESS)
   {
-    OverwriteMode = (NOverwriteMode::EEnum)v;
-    OverwriteMode_Force = true;
+    key.GetValue_Strings(kFMCopyHistoryValueName, Paths);
+	key.Close();
   }
-
-  Key_Get_BoolPair_true(key, kSplitDest, SplitDest);
-
-  Key_Get_BoolPair(key, kElimDup, ElimDup);
-  // Key_Get_BoolPair(key, kAltStreams, AltStreams);
-  Key_Get_BoolPair(key, kNtSecur, NtSecurity);
-  Key_Get_BoolPair(key, kShowPassword, ShowPassword);
 }
 
 bool Read_ShowPassword()
@@ -549,11 +579,11 @@ void CContextMenuInfo::Save() const
 
 void CContextMenuInfo::Load()
 {
-  Cascaded.Val = true;
+  Cascaded.Val = false;
   Cascaded.Def = false;
 
-  MenuIcons.Val = false;
-  MenuIcons.Def = false;
+  MenuIcons.Val = true;
+  MenuIcons.Def = true;
 
   ElimDup.Val = true;
   ElimDup.Def = false;

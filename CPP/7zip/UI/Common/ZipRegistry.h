@@ -43,6 +43,9 @@ namespace NExtract
   
   void Save_ShowPassword(bool showPassword);
   bool Read_ShowPassword();
+
+void SaveOptShowPassword(bool bShow);
+bool ReadOptShowPassword();
 }
 
 namespace NCompression

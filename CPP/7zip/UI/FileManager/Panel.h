@@ -886,7 +886,7 @@ public:
   void RefreshTitle(bool always = false) { _panelCallback->RefreshTitle(always);  }
   void RefreshTitleAlways() { RefreshTitle(true);  }
 
-  UString GetItemsInfoString(const CRecordVector<UInt32> &indices);
+  UString GetItemsInfoString(const CRecordVector<UInt32> &indices, int *soleDir);
 };
 
 class CMyBuffer
