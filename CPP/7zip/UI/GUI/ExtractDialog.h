@@ -61,7 +61,7 @@ class CExtractDialog: public NWindows::NControl::CModalDialog
   virtual bool OnButtonClicked(unsigned buttonID, HWND buttonHWND) Z7_override;
   virtual void OnOK() Z7_override;
   void OnButtonOpenPath();
-  virtual bool OnCommand(int code, int itemID, LPARAM lParam);
+  virtual bool OnCommand(unsigned code, unsigned itemID, LPARAM lParam) Z7_override;
   
   #ifndef Z7_NO_REGISTRY
 

@@ -11,7 +11,6 @@
 #include <wchar.h>
 #include "Panel.h"
 #include "ViewSettings.h"
-#ifdef LANG
 #include "LangUtils.h"
 
 using namespace NWindows;
@@ -370,7 +369,7 @@ void CCopyDialog::ShowPathFreeSpace(UString & strPath)
 	_freeSpace.SetText(strText);
 }
 
-bool CCopyDialog::OnCommand(int code, int itemID, LPARAM lParam)
+bool CCopyDialog::OnCommand(unsigned code, unsigned itemID, LPARAM lParam)
 {
 	if (itemID == IDC_COPY)
 	{

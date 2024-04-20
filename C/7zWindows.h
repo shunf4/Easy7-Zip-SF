@@ -10,6 +10,8 @@
 # pragma clang diagnostic push
 #endif
 
+#pragma warning(disable : 4255)
+
 #if defined(_MSC_VER)
 
 #pragma warning(push)
@@ -17,7 +19,7 @@
 
 #if _MSC_VER == 1900
 // for old kit10 versions
-// #pragma warning(disable : 4255) // winuser.h(13979): warning C4255: 'GetThreadDpiAwarenessContext':
+#pragma warning(disable : 4255) // winuser.h(13979): warning C4255: 'GetThreadDpiAwarenessContext':
 #endif
 // win10 Windows Kit:
 #endif // _MSC_VER
