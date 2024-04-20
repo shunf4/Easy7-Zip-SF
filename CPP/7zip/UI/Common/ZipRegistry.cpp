@@ -106,7 +106,8 @@ static LPCTSTR const kKeyName = TEXT("Extraction");
 static LPCTSTR const kExtractMode = TEXT("ExtractMode");
 static LPCTSTR const kOverwriteMode = TEXT("OverwriteMode");
 static LPCTSTR const kShowPassword = TEXT("ShowPassword");
-static LPCTSTR const kPathHistory = TEXT("PathHistory");
+// Unused?
+// static LPCTSTR const kPathHistory = TEXT("PathHistory");
 static LPCTSTR const kSplitDest = TEXT("SplitDest");
 static LPCTSTR const kElimDup = TEXT("ElimDup");
 // static LPCTSTR const kAltStreams = TEXT("AltStreams");
