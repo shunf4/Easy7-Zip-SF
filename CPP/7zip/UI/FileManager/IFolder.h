@@ -67,6 +67,8 @@ Z7_IFACE_CONSTR_FOLDER(IFolderWasChanged, 0x04)
       BSTR *destPathResult, \
       Int32 *writeAnswer)) \
   x(ShowMessage(const wchar_t *message)) \
+  x(SetSoleFolderIndex(Int64 soleFolderIndex)) \
+  x(GetSoleFolderIndex(Int64 *pSoleFolderIndex)) \
   x(SetCurrentFilePath(const wchar_t *filePath)) \
   x(SetNumFiles(UInt64 numFiles)) \
 

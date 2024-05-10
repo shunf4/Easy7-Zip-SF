@@ -255,6 +255,8 @@ public:
   bool ThereAreMessageErrors;
   NExtract::NOverwriteMode::EEnum OverwriteMode;
 
+  Int64 SoleFolderIndex;
+
   #ifndef Z7_NO_CRYPTO
   bool PasswordIsDefined;
   bool PasswordWasAsked;
@@ -279,6 +281,7 @@ public:
     ProcessAltStreams(true),
     StreamMode(false),
     OverwriteMode(NExtract::NOverwriteMode::kAsk),
+    SoleFolderIndex(-1),
     #ifndef Z7_NO_CRYPTO
     PasswordIsDefined(false),
     PasswordWasAsked(false),
