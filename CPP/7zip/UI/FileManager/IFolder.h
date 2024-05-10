@@ -69,6 +69,8 @@ FOLDER_INTERFACE_SUB(IFolderOperationsExtractCallback, IProgress, 0x0B)
       BSTR *destPathResult,
       Int32 *writeAnswer) PURE;
   STDMETHOD(ShowMessage)(const wchar_t *message) PURE;
+  STDMETHOD(SetSoleFolderIndex)(Int64 soleFolderIndex) PURE;
+  STDMETHOD(GetSoleFolderIndex)(Int64 *pSoleFolderIndex) PURE;
   STDMETHOD(SetCurrentFilePath)(const wchar_t *filePath) PURE;
   STDMETHOD(SetNumFiles)(UInt64 numFiles) PURE;
 };

@@ -23,7 +23,7 @@ STDMETHODIMP CAgentFolder::SetZoneIdMode(NExtract::NZoneIdMode::EEnum zoneMode)
 }
 
 STDMETHODIMP CAgentFolder::CopyTo(Int32 moveMode, const UInt32 *indices, UInt32 numItems,
-    Int32 includeAltStreams, Int32 replaceAltStreamCharsMode, Int64 soleFolderIndex,
+    Int32 includeAltStreams, Int32 replaceAltStreamCharsMode,
     const wchar_t *path, IFolderOperationsExtractCallback *callback)
 {
   if (moveMode)
@@ -41,6 +41,9 @@ STDMETHODIMP CAgentFolder::CopyTo(Int32 moveMode, const UInt32 *indices, UInt32 
     pathMode = (_proxy2 && _loadAltStreams) ?
       NExtract::NPathMode::kNoPathsAlt :
       NExtract::NPathMode::kNoPaths;
+
+  Int64 soleFolderIndex;
+  extractCallback2->GetSoleFolderIndex(&soleFolderIndex);
 
   return Extract(indices, numItems,
       includeAltStreams, replaceAltStreamCharsMode,

@@ -685,6 +685,16 @@ STDMETHODIMP CExtractCallbackImp::CryptoGetTextPassword(BSTR *password)
 
 #ifndef _SFX
 
+STDMETHODIMP CExtractCallbackImp::SetSoleFolderIndex(Int64 soleFolderIndex)
+{
+  this->SoleFolderIndex = soleFolderIndex;
+}
+
+STDMETHODIMP CExtractCallbackImp::GetSoleFolderIndex(Int64 *pSoleFolderIndex)
+{
+  (*pSoleFolderIndex) = this->SoleFolderIndex;
+}
+
 STDMETHODIMP CExtractCallbackImp::AskWrite(
     const wchar_t *srcPath, Int32 srcIsFolder,
     const FILETIME *srcTime, const UInt64 *srcSize,
