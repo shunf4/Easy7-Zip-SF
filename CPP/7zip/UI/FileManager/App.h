@@ -68,6 +68,7 @@ class CDropTarget:
 
   CPanel *m_Panel;
   bool m_IsAppTarget;        // true, if we want to drop to app window (not to panel).
+  bool m_IsPanelAddressComboBoxOrBar;
 
   bool m_SetPathIsOK;
 
@@ -96,6 +97,7 @@ public:
       m_SubFolderIndex(-1),
       m_Panel(NULL),
       m_IsAppTarget(false),
+      m_IsPanelAddressComboBoxOrBar(false),
       m_SetPathIsOK(false),
       App(NULL),
       SrcPanelIndex(-1),

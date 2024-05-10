@@ -4,6 +4,7 @@
 
 #include <WindowsX.h>
 // #include <stdio.h>
+#include <winuser.h>
 
 #include "../../../Common/IntToString.h"
 #include "../../../Common/StringConvert.h"
@@ -190,6 +191,23 @@ LRESULT CMyListView::OnMessage(UINT message, WPARAM wParam, LPARAM lParam)
     // return 0;
   }
   */
+  else if (message == WM_APPCOMMAND)
+  {
+    short p = GET_APPCOMMAND_LPARAM(lParam);
+    if (p == APPCOMMAND_BROWSER_BACKWARD) {
+      _panel->OpenParentFolder();
+      return 0;
+    }
+    if (p == APPCOMMAND_BROWSER_FORWARD) {
+      UStringVector folderHistory;
+      _panel->_appState->FolderHistory.GetList(folderHistory);
+      if (folderHistory.Size() >= 2) {
+        const UString x = folderHistory[1];
+        _panel->BindToPathAndRefresh(x);
+      }
+      return 0;
+    }
+  }
   else if (message == WM_KEYDOWN)
   {
     bool alt = IsKeyDown(VK_MENU);

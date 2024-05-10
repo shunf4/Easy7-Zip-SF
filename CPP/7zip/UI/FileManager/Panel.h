@@ -295,8 +295,10 @@ class CPanel: public NWindows::NControl::CWindow2
   int _comboBoxID;
   UINT _statusBarID;
 
+  public:
   CAppState *_appState;
 
+  private:
   bool OnCommand(int code, int itemID, LPARAM lParam, LRESULT &result);
   LRESULT OnMessage(UINT message, WPARAM wParam, LPARAM lParam);
   virtual bool OnCreate(CREATESTRUCT *createStruct);

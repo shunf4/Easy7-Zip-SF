@@ -1,6 +1,7 @@
 // PanelDrag.cpp
 
 #include "StdAfx.h"
+#include <windef.h>
 
 #ifdef UNDER_CE
 #include <winuserm.h>
@@ -30,6 +31,25 @@ using namespace NDir;
 #ifndef _UNICODE
 extern bool g_IsNT;
 #endif
+
+/**
+*
+Unmerged:
+
+enum Enum_CmdId
+{
+    k_OpenArc       = 8,
+}
+
+static const CCmdLangPair g_Pairs[] =
+{
+    { k_OpenArc,      IDS_CONTEXT_OPEN },
+}
+
+ClearState()
+m_IsPanelAddressComboBoxOrBar = false;
+
+*/
 
 #define kTempDirPrefix FTEXT("7zE")
 
@@ -569,6 +589,7 @@ void CDropTarget::PositionCursor(POINTL ptl)
 
   RemoveSelection();
   m_IsAppTarget = true;
+  m_IsPanelAddressComboBoxOrBar = false;
   m_Panel = NULL;
 
   m_PanelDropIsAllowed = true;
@@ -590,6 +611,19 @@ void CDropTarget::PositionCursor(POINTL ptl)
               m_PanelDropIsAllowed = false;
               return;
             }
+
+            POINT pt3 = pt;
+            if (panel->ScreenToClient(&pt3)) {
+              HWND x = ::ChildWindowFromPointEx((HWND)*panel, pt3,
+                CWP_SKIPINVISIBLE | CWP_SKIPDISABLED);
+              if (x == (HWND)(panel->_headerToolBar)
+                || x == (HWND)(panel->_headerReBar)
+                || x == (HWND)(panel->_headerComboBox)
+              ) {
+                m_IsPanelAddressComboBoxOrBar = true;
+              }
+            }
+            
             break;
           }
     if (m_IsAppTarget)
@@ -873,7 +907,13 @@ STDMETHODIMP CDropTarget::Drop(IDataObject *dataObject, DWORD keyState,
   *effect = GetEffect(keyState, pt, *effect);
   if (m_DropIsAllowed && m_PanelDropIsAllowed)
   {
-    if (needDrop)
+    if (m_Panel && m_IsPanelAddressComboBoxOrBar)
+    {
+      if (m_SourcePaths.Size() > 0) {
+        m_Panel->BindToPathAndRefresh(m_SourcePaths.Front());
+      }
+    }
+    else if (needDrop)
     {
       UString path = GetTargetPath();
       if (m_IsAppTarget && m_Panel)
