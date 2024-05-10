@@ -695,11 +695,13 @@ Z7_COM7F_IMF(CExtractCallbackImp::CryptoGetTextPassword(BSTR *password))
 Z7_COM7F_IMF(CExtractCallbackImp::SetSoleFolderIndex(Int64 soleFolderIndex))
 {
   this->SoleFolderIndex = soleFolderIndex;
+  return S_OK;
 }
 
 Z7_COM7F_IMF(CExtractCallbackImp::GetSoleFolderIndex(Int64 *pSoleFolderIndex))
 {
   (*pSoleFolderIndex) = this->SoleFolderIndex;
+  return S_OK;
 }
 
 Z7_COM7F_IMF(CExtractCallbackImp::AskWrite(
