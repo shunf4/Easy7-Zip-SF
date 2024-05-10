@@ -425,6 +425,8 @@ public:
   
   FString DirPathPrefix_for_HashFiles;
 
+  Int64 SoleFolderIndex;
+
   MY_UNKNOWN_IMP5(
       IArchiveExtractCallbackMessage,
       ICryptoGetTextPassword,
