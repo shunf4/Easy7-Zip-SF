@@ -312,8 +312,10 @@ class CPanel Z7_final: public NWindows::NControl::CWindow2
   unsigned _comboBoxID;
   UINT _statusBarID;
 
+  public:
   CAppState *_appState;
 
+  private:
   virtual bool OnCommand(unsigned code, unsigned itemID, LPARAM lParam, LRESULT &result) Z7_override;
   virtual LRESULT OnMessage(UINT message, WPARAM wParam, LPARAM lParam) Z7_override;
   virtual bool OnCreate(CREATESTRUCT *createStruct) Z7_override;

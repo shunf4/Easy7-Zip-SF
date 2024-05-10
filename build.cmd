@@ -128,7 +128,7 @@ IF %errorlevel% NEQ 0 echo "Error x64 @ 7z.dll" >> errorfile.txt
 popd
 
 powershell -Command Copy-Item .\out\*\*.exe,.\out\*\*.dll,.\out\*\*.pdb,.\out\*\*.sfx -Destination .\out\ -Verbose -Force
-explorer.exe %~dp0out
+rem explorer.exe %~dp0out
 
 rem clear errorlevel
 type nul

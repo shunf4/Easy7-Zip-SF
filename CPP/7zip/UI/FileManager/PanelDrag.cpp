@@ -1,6 +1,7 @@
 // PanelDrag.cpp
 
 #include "StdAfx.h"
+#include <windef.h>
 
 #ifdef UNDER_CE
 #include <winuserm.h>
@@ -345,9 +346,9 @@ enum Enum_CmdId
   k_Cancel        = 1,
   k_Copy_Base     = 2, // to fs
   k_Copy_ToArc    = 3,
-  k_AddToArc      = 4
-  /*
+  k_AddToArc      = 4,
   k_OpenArc       = 8,
+  /*
   k_TestArc       = 9,
   k_ExtractFiles  = 10,
   k_ExtractHere   = 11
@@ -372,7 +373,7 @@ static const CCmdLangPair g_Pairs[] =
   { k_Copy_Base  | k_MenuFlag_Move,  IDS_MOVE },
   { k_Copy_ToArc | k_MenuFlag_Copy,  IDS_COPY_TO },
   // { k_Copy_ToArc | k_MenuFlag_Move,  IDS_MOVE_TO }, // IDS_CONTEXT_COMPRESS_TO
-  // { k_OpenArc,      IDS_CONTEXT_OPEN },
+  { k_OpenArc,      IDS_CONTEXT_OPEN },
   // { k_ExtractFiles, IDS_CONTEXT_EXTRACT },
   // { k_ExtractHere,  IDS_CONTEXT_EXTRACT_HERE },
   // { k_TestArc,      IDS_CONTEXT_TEST },
@@ -409,6 +410,7 @@ class CDropTarget Z7_final:
 
   CPanel *m_Panel;
   bool m_IsAppTarget;        // true, if we want to drop to app window (not to panel)
+  bool m_IsPanelAddressComboBoxOrBar;
 
   bool m_TargetPath_WasSent_ToDataObject;           // true, if TargetPath was sent
   bool m_TargetPath_NonEmpty_WasSent_ToDataObject;  // true, if non-empty TargetPath was sent
@@ -1828,6 +1830,7 @@ CDropTarget::CDropTarget():
       // m_SubFolderIndex(-1),
       m_Panel(NULL),
       m_IsAppTarget(false),
+      m_IsPanelAddressComboBoxOrBar(false),
       m_TargetPath_WasSent_ToDataObject(false),
       m_TargetPath_NonEmpty_WasSent_ToDataObject(false),
       m_Transfer_WasSent_ToDataObject(false),
@@ -1860,6 +1863,7 @@ void CDropTarget::ClearState()
   // m_DropHighlighted_SubFolderName.Empty();
   m_Panel = NULL;
   m_IsAppTarget = false;
+  m_IsPanelAddressComboBoxOrBar = false;
   m_TargetPath_WasSent_ToDataObject = false;
   m_TargetPath_NonEmpty_WasSent_ToDataObject = false;
   m_Transfer_WasSent_ToDataObject = false;
@@ -1945,6 +1949,7 @@ void CDropTarget::PositionCursor(const POINTL &ptl)
   // m_SubFolderIndex = -1;
   // m_DropHighlighted_SubFolderName.Empty();
   m_IsAppTarget = true;
+  m_IsPanelAddressComboBoxOrBar = false;
   m_Panel = NULL;
   m_PanelDropIsAllowed = false;
 
@@ -1969,6 +1974,19 @@ void CDropTarget::PositionCursor(const POINTL &ptl)
             m_IsAppTarget = false;
             if ((int)i == SrcPanelIndex)
               return; // we don't allow to drop to source panel
+
+            POINT pt3 = pt;
+            if (panel->ScreenToClient(&pt3)) {
+              HWND x = ::ChildWindowFromPointEx((HWND)*panel, pt3,
+                CWP_SKIPINVISIBLE | CWP_SKIPDISABLED);
+              if (x == (HWND)(panel->_headerToolBar)
+                || x == (HWND)(panel->_headerReBar)
+                || x == (HWND)(panel->_headerComboBox)
+              ) {
+                m_IsPanelAddressComboBoxOrBar = true;
+              }
+            }
+            
             break;
           }
         }
@@ -2570,6 +2588,10 @@ Z7_COMWF_B CDropTarget::Drop(IDataObject *dataObject, DWORD keyState,
     opEffect = GetEffect(keyState, pt, *effect);
     if (m_IsAppTarget)
       cmd = NDragMenu::k_AddToArc;
+    else if (m_Panel && m_IsPanelAddressComboBoxOrBar)
+    {
+      cmd = NDragMenu::k_OpenArc;
+    }
     else if (m_Panel)
     {
       if (IsFsFolderPath())
@@ -2670,6 +2692,12 @@ Z7_COMWF_B CDropTarget::Drop(IDataObject *dataObject, DWORD keyState,
   {
     opEffect = DROPEFFECT_NONE;
     cmdEffect = DROPEFFECT_NONE;
+  }
+  else if (cmd == NDragMenu::k_OpenArc)
+  {
+    if (m_SourcePaths.Size() > 0) {
+      m_Panel->BindToPathAndRefresh(m_SourcePaths.Front());
+    }
   }
   else
   {

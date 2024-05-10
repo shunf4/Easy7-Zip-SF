@@ -11,3 +11,16 @@ If the artifact gets expired, you may need to manually trigger it again somehow.
 - http://www.e7z.org/
 - https://github.com/glachancecmaisonneuve/Easy7-Zip
 - https://github.com/treysis/Easy-7-Zip-ZS
+
+### DevNote
+
+print message in a dialog
+
+```
+#include <winuser.h>
+#include <strsafe.h>
+
+char a[100] {};
+StringCbPrintfA(a, 100, "index=%u   SoleFolderIndex=%ull", _index, SoleFolderIndex);
+MessageBoxA(0, a, "AAA", MB_ICONERROR);
+```
