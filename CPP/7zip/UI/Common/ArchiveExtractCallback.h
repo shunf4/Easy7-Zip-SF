@@ -437,6 +437,8 @@ public:
   
   FString DirPathPrefix_for_HashFiles;
 
+  Int64 SoleFolderIndex;
+
   CArchiveExtractCallback();
 
   void InitForMulti(bool multiArchives,
