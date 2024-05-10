@@ -28,6 +28,7 @@ IArchiveFolder is used by:
   STDMETHOD(Extract)(const UInt32 *indices, UInt32 numItems, \
       Int32 includeAltStreams, \
       Int32 replaceAltStreamCharsMode, \
+      Int64 soleFolderIndex, \
       NExtract::NPathMode::EEnum pathMode, \
       NExtract::NOverwriteMode::EEnum overwriteMode, \
       const wchar_t *path, Int32 testMode, \

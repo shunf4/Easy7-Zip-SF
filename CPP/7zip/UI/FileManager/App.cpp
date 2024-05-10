@@ -496,7 +496,7 @@ static void AddPropValueToSum(IFolderFolder *folder, int index, PROPID propID, U
     sum = (UInt64)(Int64)-1;
 }
 
-UString CPanel::GetItemsInfoString(const CRecordVector<UInt32> &indices, int *soleDir)
+UString CPanel::GetItemsInfoString(const CRecordVector<UInt32> &indices, int *soleDir, Int64 &soleFolderIndex)
 {
   UString info;
   UInt64 numDirs, numFiles, filesSize, foldersSize;
@@ -511,6 +511,7 @@ UString CPanel::GetItemsInfoString(const CRecordVector<UInt32> &indices, int *so
     {
       if (i == 0) {
         *soleDir = 1;
+        soleFolderIndex = (Int64)index;
       } else {
         *soleDir = 0;
       }
@@ -523,6 +524,10 @@ UString CPanel::GetItemsInfoString(const CRecordVector<UInt32> &indices, int *so
       AddPropValueToSum(_folder, index, kpidSize, filesSize);
       numFiles++;
     }
+  }
+
+  if ((*soleDir) != 1) {
+    soleFolderIndex = -1LL;
   }
 
   AddValuePair2(info, IDS_PROP_FOLDERS, numDirs, foldersSize);
@@ -629,6 +634,8 @@ void CApp::OnCopy(bool move, bool copyToSame, int srcPanelIndex)
   
   bool useFullItemPaths = srcPanel.Is_IO_FS_Folder(); // maybe we need flat also here ??
 
+  Int64 soleFolderIndex = -1LL; // initially unset value
+
   {
     CCopyDialog copyDialog;
 
@@ -636,7 +643,7 @@ void CApp::OnCopy(bool move, bool copyToSame, int srcPanelIndex)
     copyDialog.Value = destPath;
     LangString(move ? IDS_MOVE : IDS_COPY, copyDialog.Title);
     LangString(move ? IDS_MOVE_TO : IDS_COPY_TO, copyDialog.Static);
-    copyDialog.Info = srcPanel.GetItemsInfoString(indices, &copyDialog.soleDir);
+    copyDialog.Info = srcPanel.GetItemsInfoString(indices, &copyDialog.soleDir, soleFolderIndex);
 	copyDialog.m_currentFolderPrefix = srcPanel._currentFolderPrefix;
 
     if (copyDialog.Create(srcPanel.GetParent()) != IDOK)
@@ -815,6 +822,7 @@ void CApp::OnCopy(bool move, bool copyToSame, int srcPanelIndex)
     options.includeAltStreams = true;
     options.replaceAltStreamChars = false;
     options.showErrorMessages = true;
+    options.soleFolderIndex = soleFolderIndex;
 
     result = srcPanel.CopyTo(options, indices, NULL);
   }

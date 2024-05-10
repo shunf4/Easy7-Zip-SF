@@ -460,6 +460,7 @@ public:
    #endif
     _keepAndReplaceEmptyDirPrefixes = keepAndReplaceEmptyDirPrefixes;
     NumFolders = NumFiles = NumAltStreams = UnpackSize = AltStreams_UnpackSize = 0;
+    SoleFolderIndex = -1LL;
   }
 
   #ifndef _SFX

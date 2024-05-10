@@ -183,6 +183,7 @@ public:
   CPanel *Panel;
   CRecordVector<UInt32> Indices;
   UString Folder;
+  Int64 SoleFolderIndex;
   CDataObject *DataObjectSpec;
   CMyComPtr<IDataObject> DataObject;
   
@@ -351,6 +352,7 @@ void CPanel::OnDrag(LPNMLISTVIEW /* nmListView */)
   CDataObject *dataObjectSpec = new CDataObject;
   CMyComPtr<IDataObject> dataObject = dataObjectSpec;
 
+  Int64 soleFolderIndex = -1LL; // initially unset value
   {
     UStringVector names;
 
@@ -366,6 +368,15 @@ void CPanel::OnDrag(LPNMLISTVIEW /* nmListView */)
       else
       {
         s = GetItemName(index);
+        if (IsItem_Folder(index)) {
+          if (i == 0) {
+            soleFolderIndex = (Int64)index;
+          } else {
+            soleFolderIndex = -1LL;
+          }
+        } else {
+          soleFolderIndex = -1LL;
+        }
         /*
         // We use (keepAndReplaceEmptyPrefixes = true) in CAgentFolder::Extract
         // So the following code is not required.
@@ -397,6 +408,7 @@ void CPanel::OnDrag(LPNMLISTVIEW /* nmListView */)
   dropSourceSpec->Panel = this;
   dropSourceSpec->Indices = indices;
   dropSourceSpec->Folder = fs2us(dirPrefix);
+  dropSourceSpec->SoleFolderIndex = soleFolderIndex;
   dropSourceSpec->DataObjectSpec = dataObjectSpec;
   dropSourceSpec->DataObject = dataObjectSpec;
 
@@ -482,6 +494,7 @@ void CPanel::OnDrag(LPNMLISTVIEW /* nmListView */)
         options.folder = dataObjectSpec->Path;
         // if MOVE is not allowed, we just use COPY operation
         options.moveMode = (effect == DROPEFFECT_MOVE && moveIsAllowed);
+        options.soleFolderIndex = soleFolderIndex;
         res = CopyTo(options, indices, &dropSourceSpec->Messages);
       }
     /*
