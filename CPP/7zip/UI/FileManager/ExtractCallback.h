@@ -298,7 +298,7 @@ public:
     ProcessAltStreams(true),
     StreamMode(false),
     OverwriteMode(NExtract::NOverwriteMode::kAsk),
-    SoleFolderIndex(-1),
+    SoleFolderIndex(-1LL),
     #ifndef _NO_CRYPTO
     PasswordIsDefined(false),
     PasswordWasAsked(false),

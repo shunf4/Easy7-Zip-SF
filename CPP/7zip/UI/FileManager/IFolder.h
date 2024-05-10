@@ -82,7 +82,6 @@ FOLDER_INTERFACE_SUB(IFolderOperationsExtractCallback, IProgress, 0x0B)
   STDMETHOD(Delete)(const UInt32 *indices, UInt32 numItems, IProgress *progress) x; \
   STDMETHOD(CopyTo)(Int32 moveMode, const UInt32 *indices, UInt32 numItems, \
       Int32 includeAltStreams, Int32 replaceAltStreamCharsMode, \
-      Int64 soleFolderIndex, \
       const wchar_t *path, IFolderOperationsExtractCallback *callback) x; \
   STDMETHOD(CopyFrom)(Int32 moveMode, const wchar_t *fromFolderPath, \
       const wchar_t * const *itemsPaths, UInt32 numItems, IProgress *progress) x; \
