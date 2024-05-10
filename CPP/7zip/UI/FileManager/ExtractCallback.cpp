@@ -688,11 +688,13 @@ STDMETHODIMP CExtractCallbackImp::CryptoGetTextPassword(BSTR *password)
 STDMETHODIMP CExtractCallbackImp::SetSoleFolderIndex(Int64 soleFolderIndex)
 {
   this->SoleFolderIndex = soleFolderIndex;
+  return S_OK;
 }
 
 STDMETHODIMP CExtractCallbackImp::GetSoleFolderIndex(Int64 *pSoleFolderIndex)
 {
   (*pSoleFolderIndex) = this->SoleFolderIndex;
+  return S_OK;
 }
 
 STDMETHODIMP CExtractCallbackImp::AskWrite(
