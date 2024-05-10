@@ -24,7 +24,7 @@ Z7_COM7F_IMF(CAgentFolder::SetZoneIdMode(NExtract::NZoneIdMode::EEnum zoneMode))
 
 
 Z7_COM7F_IMF(CAgentFolder::CopyTo(Int32 moveMode, const UInt32 *indices, UInt32 numItems,
-    Int32 includeAltStreams, Int32 replaceAltStreamCharsMode,
+    Int32 includeAltStreams, Int32 replaceAltStreamCharsMode, Int64 soleFolderIndex,
     const wchar_t *path, IFolderOperationsExtractCallback *callback))
 {
   if (moveMode)
@@ -45,6 +45,7 @@ Z7_COM7F_IMF(CAgentFolder::CopyTo(Int32 moveMode, const UInt32 *indices, UInt32 
 
   return Extract(indices, numItems,
       includeAltStreams, replaceAltStreamCharsMode,
+      soleFolderIndex,
       pathMode, NExtract::NOverwriteMode::kAsk,
       path, BoolToInt(false), extractCallback2);
   COM_TRY_END

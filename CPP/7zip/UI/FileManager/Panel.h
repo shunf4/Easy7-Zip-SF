@@ -265,6 +265,7 @@ struct CCopyToOptions
   NExtract::NZoneIdMode::EEnum ZoneIdMode;
 
   UString folder;
+  Int64 soleFolderIndex;
 
   UStringVector hashMethods;
 
@@ -280,6 +281,7 @@ struct CCopyToOptions
       showErrorMessages(false),
       NeedRegistryZone(true),
       ZoneIdMode(NExtract::NZoneIdMode::kNone),
+      soleFolderIndex(-1LL),
       VirtFileSystemSpec(NULL),
       VirtFileSystem(NULL)
       {}
@@ -971,7 +973,7 @@ public:
   void RefreshTitle(bool always = false) { _panelCallback->RefreshTitle(always);  }
   void RefreshTitleAlways() { RefreshTitle(true);  }
 
-  UString GetItemsInfoString(const CRecordVector<UInt32> &indices, int *soleDir);
+  UString GetItemsInfoString(const CRecordVector<UInt32> &indices, int *soleDir, Int64 &soleFolderIndex);
 };
 
 class CMyBuffer

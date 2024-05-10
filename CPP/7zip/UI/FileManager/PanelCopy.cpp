@@ -114,6 +114,7 @@ HRESULT CPanelCopyThread::ProcessVirt()
       &Indices.Front(), Indices.Size(),
       BoolToInt(options->includeAltStreams),
       BoolToInt(options->replaceAltStreamChars),
+      options->soleFolderIndex,
       options->folder, ExtractCallback);
 
   if (result2 == S_OK && !ExtractCallbackSpec->ThereAreMessageErrors)

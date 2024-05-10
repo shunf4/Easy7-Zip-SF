@@ -275,7 +275,8 @@ CArchiveExtractCallback::CArchiveExtractCallback():
     Write_CTime(true),
     Write_ATime(true),
     Write_MTime(true),
-    _multiArchives(false)
+    _multiArchives(false),
+    SoleFolderIndex(-1LL)
 {
   LocalProgressSpec = new CLocalProgress();
   _localProgress = LocalProgressSpec;
@@ -378,6 +379,8 @@ void CArchiveExtractCallback::Init(
     NDir::MyGetFullPathName(directoryPath, _dirPathPrefix_Full);
     NName::NormalizeDirPathPrefix(_dirPathPrefix_Full);
   }
+
+  SoleFolderIndex = -1LL;
 }
 
 
@@ -1142,7 +1145,7 @@ void CArchiveExtractCallback::CreateFolders()
   CDirPathTime pt;
   GetFiTimesCAM(pt);
  
-  if (pt.IsSomeTimeDefined())
+  if (pt.IsSomeTimeDefined() && _index != SoleFolderIndex)
   {
     pt.Path = fullPathNew;
     pt.SetDirTime();

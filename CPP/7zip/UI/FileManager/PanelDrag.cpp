@@ -554,6 +554,7 @@ public:
   CRecordVector<UInt32> Indices;
 
   UString SrcDirPrefix_Temp; // FS directory with source files or Temp
+  Int64 SoleFolderIndex;
   UString DestDirPrefix_FromTarget;
   /* destination Path that was sent by Target via SetData().
      it can be altstreams prefix.
@@ -633,6 +634,7 @@ void CDataObject::CopyFromPanelTo_Folder()
   {
     CCopyToOptions options;
     options.folder = SrcDirPrefix_Temp;
+    options.soleFolderIndex = SoleFolderIndex;
     /* 15.13: fixed problem with mouse cursor for password window.
        DoDragDrop() probably calls SetCapture() to some hidden window.
        But it's problem, if we show some modal window, like MessageBox.
@@ -1579,6 +1581,7 @@ void CPanel::OnDrag(LPNMLISTVIEW /* nmListView */, bool isRightButton)
     */
   }
 
+  Int64 soleFolderIndex = -1LL; // initially unset value
   {
     UStringVector names;
     // names variable is     USED for drag and drop from 7-zip to Explorer or to 7-zip archive folder.
@@ -1592,6 +1595,15 @@ void CPanel::OnDrag(LPNMLISTVIEW /* nmListView */, bool isRightButton)
       else
       {
         s = GetItemName(index);
+        if (IsItem_Folder(index)) {
+          if (i == 0) {
+            soleFolderIndex = (Int64)index;
+          } else {
+            soleFolderIndex = -1LL;
+          }
+        } else {
+          soleFolderIndex = -1LL;
+        }
         /*
         // We use (keepAndReplaceEmptyPrefixes = true) in CAgentFolder::Extract
         // So the following code is not required.
@@ -1620,6 +1632,7 @@ void CPanel::OnDrag(LPNMLISTVIEW /* nmListView */, bool isRightButton)
   dataObjectSpec->Panel = this;
   dataObjectSpec->Indices = indices;
   dataObjectSpec->SrcDirPrefix_Temp = dirPrefix;
+  dataObjectSpec->SoleFolderIndex = soleFolderIndex;
 
   dropSourceSpec->DataObjectSpec = dataObjectSpec;
   dropSourceSpec->DataObject = dataObjectSpec;
@@ -1757,6 +1770,7 @@ void CPanel::OnDrag(LPNMLISTVIEW /* nmListView */, bool isRightButton)
         */
         // options.moveMode = (moveIsAllowed && effect == DROPEFFECT_MOVE) // before v23.00:
         options.moveMode = moveIsAllowed;
+        options.soleFolderIndex = soleFolderIndex;
         if (moveIsAllowed)
         {
           if (dataObjectSpec->m_Transfer_WasSet)
