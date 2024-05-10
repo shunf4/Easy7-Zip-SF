@@ -43,7 +43,7 @@ STDMETHODIMP CAgentFolder::CopyTo(Int32 moveMode, const UInt32 *indices, UInt32 
       NExtract::NPathMode::kNoPaths;
 
   Int64 soleFolderIndex;
-  extractCallback2->GetSoleFolderIndex(&soleFolderIndex);
+  callback->GetSoleFolderIndex(&soleFolderIndex);
 
   return Extract(indices, numItems,
       includeAltStreams, replaceAltStreamCharsMode,
