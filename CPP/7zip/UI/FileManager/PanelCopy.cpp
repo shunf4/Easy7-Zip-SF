@@ -105,6 +105,7 @@ HRESULT CPanelCopyThread::ProcessVirt()
     result2 = archiveFolder->Extract(&Indices.Front(), Indices.Size(),
         BoolToInt(options->includeAltStreams),
         BoolToInt(options->replaceAltStreamChars),
+        -1LL,
         pathMode, NExtract::NOverwriteMode::kAsk,
         options->folder, BoolToInt(true), extractCallback2);
   }
