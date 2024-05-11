@@ -1536,7 +1536,7 @@ Z7_COM7F_IMF(CAgentFolder::Extract(const UInt32 *indices,
   // do we need another base folder for subfolders ?
   extractCallbackSpec->DirPathPrefix_for_HashFiles = _agentSpec->_hashBaseFolderPrefix;
 
-  extractCallbackSpec->SoleFolderIndex = soleFolderIndex;
+  extractCallbackSpec->SoleFolderIndex = soleFolderIndex == -1LL ? -1LL : GetRealIndex((int)soleFolderIndex);
 
   CUIntVector realIndices;
   GetRealIndices(indices, numItems, IntToBool(includeAltStreams),

@@ -1757,6 +1757,10 @@ void CPanel::OnDrag(LPNMLISTVIEW /* nmListView */, bool isRightButton)
       }
     }
 
+    if (dataObjectSpec->m_Transfer.Target.Cmd_Type == NDragMenu::k_OpenArc) {
+      need_Process = false;
+    }
+
     if (need_Process)
       if (!dataObjectSpec->DestDirPrefix_FromTarget.IsEmpty())
       {
@@ -1972,8 +1976,6 @@ void CDropTarget::PositionCursor(const POINTL &ptl)
           {
             m_Panel = panel;
             m_IsAppTarget = false;
-            if ((int)i == SrcPanelIndex)
-              return; // we don't allow to drop to source panel
 
             POINT pt3 = pt;
             if (panel->ScreenToClient(&pt3)) {
@@ -1986,6 +1988,9 @@ void CDropTarget::PositionCursor(const POINTL &ptl)
                 m_IsPanelAddressComboBoxOrBar = true;
               }
             }
+
+            if ((int)i == SrcPanelIndex && !m_IsPanelAddressComboBoxOrBar)
+              return; // we don't allow to drop to source panel
             
             break;
           }
@@ -2770,13 +2775,16 @@ Z7_COMWF_B CDropTarget::Drop(IDataObject *dataObject, DWORD keyState,
     // res = SendToSource_UInt32(dataObject, RegisterClipboardFormat(CFSTR_LOGICALPERFORMEDDROPEFFECT), DROPEFFECT_MOVE); // for debug
     /* res = */ SendToSource_UInt32(dataObject,
         RegisterClipboardFormat(CFSTR_PERFORMEDDROPEFFECT),
-        cmd == NDragMenu::k_Cancel ? DROPEFFECT_NONE : DROPEFFECT_COPY);
+        ((cmd == NDragMenu::k_Cancel) || (cmd == NDragMenu::k_OpenArc)) ? DROPEFFECT_NONE : DROPEFFECT_COPY);
     // res = res;
   }
   RemoveSelection();
 
   target.FuncType = k_DragTargetMode_Drop_End;
   target.Cmd_Type = cmd;
+  if (cmd == NDragMenu::k_OpenArc) {
+    needDrop_by_Source = false;
+  }
   if (needDrop_by_Source)
     target.Flags |= k_TargetFlags_MustBeProcessedBySource;
 

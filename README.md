@@ -20,7 +20,9 @@ print message in a dialog
 #include <winuser.h>
 #include <strsafe.h>
 
-char a[100] {};
-StringCbPrintfA(a, 100, "index=%u   SoleFolderIndex=%ull", _index, SoleFolderIndex);
-MessageBoxA(0, a, "AAA", MB_ICONERROR);
+{
+    char a[100] {};
+    StringCbPrintfA(a, 100, "index=%u   SoleFolderIndex=%lld", _index, SoleFolderIndex);
+    MessageBoxA(0, a, "AAA", MB_ICONERROR);
+}
 ```
