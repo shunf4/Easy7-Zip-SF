@@ -488,10 +488,10 @@ int CBrowseDialog::CompareItems(LPARAM lParam1, LPARAM lParam2) const
   const CFileInfo &f1 = _files[(int)lParam1];
   const CFileInfo &f2 = _files[(int)lParam2];
 
-  const bool isDir1 = f1.IsDir();
-  const bool isDir2 = f2.IsDir();
-  if (isDir1 && !isDir2) return -1;
-  if (isDir2 && !isDir1) return 1;
+  // const bool isDir1 = f1.IsDir();
+  // const bool isDir2 = f2.IsDir();
+  // if (isDir1 && !isDir2) return -1;
+  // if (isDir2 && !isDir1) return 1;
   
   int res = 0;
   switch (_sortIndex)

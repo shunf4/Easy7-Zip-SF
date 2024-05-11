@@ -191,8 +191,8 @@ int CALLBACK CompareItems(LPARAM lParam1, LPARAM lParam2, LPARAM lpData)
 
   CPanel *panel = (CPanel*)lpData;
 
-  const bool isDir1 = panel->IsItem_Folder((unsigned)lParam1);
-  const bool isDir2 = panel->IsItem_Folder((unsigned)lParam2);
+  // const bool isDir1 = panel->IsItem_Folder((unsigned)lParam1);
+  // const bool isDir2 = panel->IsItem_Folder((unsigned)lParam2);
   
   // if (isDir1 && !isDir2) return -1;
   // if (isDir2 && !isDir1) return 1;
