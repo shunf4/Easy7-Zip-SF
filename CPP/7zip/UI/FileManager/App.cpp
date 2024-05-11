@@ -358,6 +358,11 @@ HRESULT CApp::Create(HWND hwnd, const UString &mainPath, const UString &arcForma
   
   SetFocusedPanel(LastFocusedPanel);
   Panels[LastFocusedPanel].SetFocusToList();
+
+  if (pDelayedOpenFolderAfterExtractPathCriticalSection == NULL) {
+    pDelayedOpenFolderAfterExtractPathCriticalSection = new NWindows::NSynchronization::CCriticalSection();
+  }
+
   return S_OK;
 }
 
@@ -409,6 +414,10 @@ void CApp::Save()
 
 void CApp::Release()
 {
+  if (pDelayedOpenFolderAfterExtractPathCriticalSection != NULL) {
+    delete pDelayedOpenFolderAfterExtractPathCriticalSection;
+    pDelayedOpenFolderAfterExtractPathCriticalSection = NULL;
+  }
   // It's for unloading COM dll's: don't change it.
   for (unsigned i = 0; i < kNumPanelsMax; i++)
     Panels[i].Release();
@@ -885,9 +894,49 @@ void CApp::OnCopy(bool move, bool copyToSame, int srcPanelIndex)
 
   if (!g_bProcessError && result == S_OK)
   {
-	  if (openOutputFolder && IsDirectory(destPath))
+	  if (openOutputFolder)
 	  {
-		StartApplicationDontWait(destPath, destPath, (HWND)_window);
+      bool done = false;
+      if (!done && soleFolderIndex != -1LL) {
+        UString soleFolderName = srcPanel.GetItemRelPath((UInt32)soleFolderIndex);
+        if (soleFolderName.Len() > 0 && (soleFolderName[0] == L'\\' || soleFolderName[0] == L'/' || soleFolderName[0] == '\\' || soleFolderName[0] == '/')) {
+          soleFolderName = soleFolderName.Mid(1, soleFolderName.Len() - 1);
+        }
+        if (soleFolderName.Len() > 0 && (soleFolderName.Back() == L'\\' || soleFolderName.Back() == L'/' || soleFolderName.Back() == '\\' || soleFolderName.Back() == '/')) {
+          soleFolderName.DeleteBack();
+        }
+        UString destPathWithSoleFolder = destPath;
+        destPathWithSoleFolder += L'\\';
+        destPathWithSoleFolder += soleFolderName;
+        if (IsDirectory(destPathWithSoleFolder)) {
+          done = true;
+          if (close7Zip)
+          {
+            StartApplicationDontWait(destPathWithSoleFolder, destPathWithSoleFolder, (HWND)_window);
+          } else {
+            {
+              NWindows::NSynchronization::CCriticalSectionLock lock(*pDelayedOpenFolderAfterExtractPathCriticalSection);
+              DelayedOpenFolderAfterExtractPath = destPathWithSoleFolder;
+            }
+            _window.SetTimer(1678, 800);
+          }
+        }
+      }
+      
+      if (!done) {
+        if (IsDirectory(destPath)) {
+          if (close7Zip)
+          {
+            StartApplicationDontWait(destPath, destPath, (HWND)_window);
+          } else {
+            {
+              NWindows::NSynchronization::CCriticalSectionLock lock(*pDelayedOpenFolderAfterExtractPathCriticalSection);
+              DelayedOpenFolderAfterExtractPath = destPath;
+            }
+            _window.SetTimer(1678, 800);
+          }
+        }
+      }
 	  }
 	  if (deleteSourceFile)
 	  {

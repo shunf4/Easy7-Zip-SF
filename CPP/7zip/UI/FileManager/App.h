@@ -124,6 +124,9 @@ public:
   bool ShowButtonsLables;
   bool LargeButtons;
 
+  UString DelayedOpenFolderAfterExtractPath;
+  NWindows::NSynchronization::CCriticalSection *pDelayedOpenFolderAfterExtractPathCriticalSection;
+
   CAppState AppState;
   CPanelCallbackImp m_PanelCallbackImp[kNumPanelsMax];
   CPanel Panels[kNumPanelsMax];
@@ -143,7 +146,9 @@ public:
   void ReloadLang();
 
   CApp(): _window(0), NumPanels(2), LastFocusedPanel(0),
-    AutoRefresh_Mode(true)
+    AutoRefresh_Mode(true),
+    DelayedOpenFolderAfterExtractPath(L""),
+    pDelayedOpenFolderAfterExtractPathCriticalSection(NULL)
   {
     SetPanels_AutoRefresh_Mode();
   }

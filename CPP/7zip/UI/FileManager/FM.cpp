@@ -1012,6 +1012,24 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
       g_App.OnNotify((int)wParam, (LPNMHDR)lParam);
       break;
     }
+
+    case WM_TIMER:
+    {
+      if (wParam == 1678) {
+        KillTimer(hWnd, 1678);
+        UString p;
+        {
+          NWindows::NSynchronization::CCriticalSectionLock lock(*g_App.pDelayedOpenFolderAfterExtractPathCriticalSection);
+          p = g_App.DelayedOpenFolderAfterExtractPath;
+          g_App.DelayedOpenFolderAfterExtractPath.Wipe_and_Empty();
+        }
+
+        if (!p.IsEmpty()) {
+          StartApplicationDontWait(p, p, hWnd);
+        }
+      }
+      break;
+    }
     
     /*
     case WM_DROPFILES:

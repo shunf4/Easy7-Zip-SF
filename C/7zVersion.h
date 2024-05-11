@@ -31,9 +31,9 @@
 
 #define MY_EASY7ZIP_7ZIP "Easy 7-Zip"
 
-#define MY_EASY7ZIP_VERSION "0.1.6-shunf4"
+#define MY_EASY7ZIP_VERSION "0.1.6-shunf4-2"
 
-#define MY_EASY7ZIP_7ZIP_VERSION "Easy 7-Zip v0.1.6-shunf4"
+#define MY_EASY7ZIP_7ZIP_VERSION "Easy 7-Zip v0.1.6-shunf4-2"
 
 #define MY_EASY7ZIP_COPYRIGHT "Portions Copyright (C) 2013-2016 James Hoo"
 

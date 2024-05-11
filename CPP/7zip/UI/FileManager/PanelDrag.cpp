@@ -506,6 +506,13 @@ void CPanel::OnDrag(LPNMLISTVIEW /* nmListView */)
   if (res == DRAGDROP_S_DROP)
   {
     res = dropSourceSpec->Result;
+    /**
+    Unmerged:
+    
+    if (dataObjectSpec->m_Transfer.Target.Cmd_Type == NDragMenu::k_OpenArc) {
+      need_Process = false;
+    }
+    */
     if (dropSourceSpec->NeedPostCopy)
       if (!dataObjectSpec->Path.IsEmpty())
       {
@@ -606,11 +613,6 @@ void CDropTarget::PositionCursor(POINTL ptl)
           {
             m_Panel = &App->Panels[i];
             m_IsAppTarget = false;
-            if ((int)i == SrcPanelIndex)
-            {
-              m_PanelDropIsAllowed = false;
-              return;
-            }
 
             POINT pt3 = pt;
             if (panel->ScreenToClient(&pt3)) {
@@ -622,6 +624,12 @@ void CDropTarget::PositionCursor(POINTL ptl)
               ) {
                 m_IsPanelAddressComboBoxOrBar = true;
               }
+            }
+
+            if ((int)i == SrcPanelIndex && !m_IsPanelAddressComboBoxOrBar)
+            {
+              m_PanelDropIsAllowed = false;
+              return;
             }
             
             break;
