@@ -191,8 +191,8 @@ int CALLBACK CompareItems(LPARAM lParam1, LPARAM lParam2, LPARAM lpData)
 
   CPanel *panel = (CPanel*)lpData;
 
-  bool isDir1 = panel->IsItem_Folder((int)lParam1);
-  bool isDir2 = panel->IsItem_Folder((int)lParam2);
+  // bool isDir1 = panel->IsItem_Folder((int)lParam1);
+  // bool isDir2 = panel->IsItem_Folder((int)lParam2);
   
   // if (isDir1 && !isDir2) return -1;
   // if (isDir2 && !isDir1) return 1;
