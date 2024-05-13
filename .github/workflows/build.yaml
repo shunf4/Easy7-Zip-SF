@@ -4,9 +4,13 @@ on:
   push:
     branches:
       - easy7zip-sf
+      - e7z-sf-zstd
+      - e7z-sf-without-zstd
   pull_request:
     branches:
       - easy7zip-sf
+      - e7z-sf-zstd
+      - e7z-sf-without-zstd
 
 jobs:
   build:
