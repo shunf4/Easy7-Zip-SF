@@ -1,4 +1,12 @@
 @echo off
+cls
+if "%1" == "clean" (
+    echo RMDIR out
+    echo RMDIR out
+    echo RMDIR out
+    echo RMDIR out
+    rmdir /s /q out
+)
 set OPTS=Z7_SFX=1 PLATFORM=x64
 set LFLAGS=/DEBUG /SUBSYSTEM:WINDOWS,"5.02"
 
@@ -163,6 +171,12 @@ powershell -Command Copy-Item .\out\*\*.exe,.\out\*\*.dll,.\out\*\*.pdb,.\out\*\
 rem explorer.exe %~dp0out
 
 if %HAS_ERROR% == TRUE (
+    echo HAS ERROR
+    echo HAS ERROR
+    echo HAS ERROR
+    echo HAS ERROR
+    echo HAS ERROR
+    echo HAS ERROR
     echo HAS ERROR
     echo HAS ERROR
     echo HAS ERROR
