@@ -33,14 +33,10 @@ build.cmd seems not noticing changes that involves only header files; ensure cle
 
 interesting commits from zstd that yet merged
 
-c2277a39577dd9384e7f776f9871cbabbf9ac53e Fix #101 - thanks to aeonios for pointing that out
-d17138af60791397d98f0f991348ba88b30ab53e Fix #103 and comments for level and version numbers
-26cca533b1b5bd9ff39317040785f83ee3cadc6e Fix these: #73, #102, #103, #104, #105 and #106
-2314c89604a5362d58407c2ea18d3695a46c12c6 Some more fixes, mainly issue #116
-a87ef5f0fe53727e534e3bd332ceeea94c8aff32 Fix #125
-3f7481f4083afd5579d526d91911bbfa65cc1a27 fix Bug #144
-86721224f0194bd91d45349cad98954e1fdd1542 Merge pull request #159 from jinfeihan57/Bug#144
-650fba0328fde64c76fb974c843ad4b6c6678600 Add history tracking and selectable hash formatting
+~~c2277a39577dd9384e7f776f9871cbabbf9ac53e Fix #101 - thanks to aeonios for pointing that out~~ (no longer valid)
+~~2314c89604a5362d58407c2ea18d3695a46c12c6 Some more fixes, mainly issue #116~~  (no longer valid)
+~~a87ef5f0fe53727e534e3bd332ceeea94c8aff32 Fix #125~~ (not valid for non-zstd)
+~~650fba0328fde64c76fb974c843ad4b6c6678600 Add history tracking and selectable hash formatting~~ (not too useful)
 8cfdd747c83223fa1e417dce1314b84b61c5feaa Fixes for "vulnerable command line parsing"
 (and other commit around this time)
 19e97e4c680330d08a6665f3cf08dc31ba339000 Code deduplication GetQuotedString()
