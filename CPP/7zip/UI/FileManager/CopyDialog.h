@@ -31,7 +31,7 @@ protected:
 
 public:
   // soleDir=2: undecided
-  CCopyDialog(): soleDir(2), m_bOpenOutputFolder(false), m_bDeleteSourceFile(false), m_bClose7Zip (false) { m_sizeMinWindow.cx = 0; m_sizeMinWindow.cy = 0; }
+  CCopyDialog(): soleDir(2), m_bOpenOutputFolder(false), m_bDeleteSourceFile(false), m_bClose7Zip (false), isActuallyAppendingFilename(false) { m_sizeMinWindow.cx = 0; m_sizeMinWindow.cy = 0; }
 
   UString Title;
   UString Static;
@@ -47,6 +47,10 @@ public:
 
   UString m_currentFolderPrefix;
   UString m_strRealFileName;
+
+  UString ValueBeforeAppendingFilename;
+
+  bool isActuallyAppendingFilename;
 
   INT_PTR Create(HWND parentWindow = NULL) { return CModalDialog::Create(IDD_COPY, parentWindow); }
 

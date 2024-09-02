@@ -317,19 +317,20 @@ void AddUniqueStringToHeadOfList(UStringVector &list, const UString &s)
 
 void SaveOptOpenOutputFolder(bool bOpen)
 {
-  CKey key;
-  key.Create(HKEY_CURRENT_USER, kCUBasePath);
-  key.SetValue(kOpenOutputFolderValueName, bOpen);
+  // CKey key;
+  // key.Create(HKEY_CURRENT_USER, kCUBasePath);
+  // key.SetValue(kOpenOutputFolderValueName, bOpen);
+  (void)(bOpen);
 }
 
 bool ReadOptOpenOutputFolder()
 {
   CKey key;
   if (key.Open(HKEY_CURRENT_USER, kCUBasePath, KEY_READ) != ERROR_SUCCESS)
-    return false;
+    return true;
   bool bOpen;
   if (key.QueryValue(kOpenOutputFolderValueName, bOpen) != ERROR_SUCCESS)
-    return false;
+    return true;
   return bOpen;
 }
 

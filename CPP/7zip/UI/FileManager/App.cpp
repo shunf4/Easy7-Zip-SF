@@ -610,6 +610,7 @@ void CApp::OnCopy(bool move, bool copyToSame, unsigned srcPanelIndex)
 
   CRecordVector<UInt32> indices;
   UString destPath;
+  UString destPathBeforeAppendingFilename;
   bool openOutputFolder;
   bool deleteSourceFile;
   bool close7Zip;
@@ -663,6 +664,7 @@ void CApp::OnCopy(bool move, bool copyToSame, unsigned srcPanelIndex)
 	close7Zip = copyDialog.m_bClose7Zip;
 
     destPath = copyDialog.Value;
+    destPathBeforeAppendingFilename = copyDialog.isActuallyAppendingFilename ? copyDialog.ValueBeforeAppendingFilename : destPath;
   }
 
   {
@@ -787,7 +789,7 @@ void CApp::OnCopy(bool move, bool copyToSame, unsigned srcPanelIndex)
     if (!destIsFsPath)
       useDestPanel = true;
 
-    AddUniqueStringToHeadOfList(copyFolders, destPath);
+    AddUniqueStringToHeadOfList(copyFolders, destPathBeforeAppendingFilename);
     while (copyFolders.Size() > 20)
       copyFolders.DeleteBack();
     SaveCopyHistory(copyFolders);

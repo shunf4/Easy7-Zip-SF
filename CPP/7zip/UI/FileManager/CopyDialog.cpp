@@ -63,6 +63,7 @@ bool CCopyDialog::OnInit()
   m_sizeMinWindow.cy = (RECT_SIZE_Y(rc))*4/5;
   /////////////////////////////////////////////////////////
   m_strRealFileName.Empty();
+  ValueBeforeAppendingFilename.Empty();
   if (IsDirectory(m_currentFolderPrefix))
   {
 	  EnableItem(IDC_COPY_ADD_FILE_NAME, false);
@@ -264,12 +265,16 @@ void CCopyDialog::OnButtonAddFileName()
 	}
 	if (strLastDir != m_strRealFileName)
 	{
+		ValueBeforeAppendingFilename = currentPath;
 		currentPath += L'\\';
 		currentPath += m_strRealFileName;
 
 		_path.SetText(currentPath);
+
+		isActuallyAppendingFilename = true;
 	} else {
 		_path.SetText(currentPath.Mid(0, n));
+		isActuallyAppendingFilename = false;
 	}
 	_path.SetFocus();
 }
