@@ -22,6 +22,7 @@ class CCopyDialog: public NWindows::NControl::CModalDialog
   void OnButtonOpenPath();
   void OnButtonAddFileName();
   bool OnCommand(unsigned code, unsigned itemID, LPARAM lParam) Z7_override;
+  bool OnTimer(WPARAM /* timerID */, LPARAM /* callback */) Z7_override;
   bool OnGetMinMaxInfo(PMINMAXINFO pMMI);
 
   void ShowPathFreeSpace(UString & strPath);

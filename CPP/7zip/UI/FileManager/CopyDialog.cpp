@@ -8,7 +8,9 @@
 
 #include "BrowseDialog.h"
 #include "CopyDialog.h"
+#include <cstdlib>
 #include <wchar.h>
+#include <winuser.h>
 #include "Panel.h"
 #include "ViewSettings.h"
 #include "LangUtils.h"
@@ -287,6 +289,15 @@ bool CCopyDialog::OnMessage(UINT message, WPARAM wParam, LPARAM lParam)
 		{
 			return OnGetMinMaxInfo((PMINMAXINFO)lParam);
 		}
+	case WM_TIMER:
+		{
+			if (wParam == 1679) {
+				KillTimer(1679);
+
+				OnButtonAddFileName();
+			}
+			return 0;
+		}
 	}
 	return CModalDialog::OnMessage(message, wParam, lParam);
 }
@@ -387,8 +398,9 @@ bool CCopyDialog::OnCommand(unsigned code, unsigned itemID, LPARAM lParam)
 		{
 			UString strPath;
 			_path.GetText(strPath);
+
 			if (isActuallyAppendingFilename) {
-				OnButtonAddFileName();	
+				isActuallyAppendingFilename = false;
 			}
 
 			ShowPathFreeSpace(strPath);
@@ -402,7 +414,7 @@ bool CCopyDialog::OnCommand(unsigned code, unsigned itemID, LPARAM lParam)
 				UString strPath;
 				_path.GetLBText(nSel, strPath);
 				if (isActuallyAppendingFilename) {
-					OnButtonAddFileName();	
+					this->SetTimer(1679, 0);
 				}
 				ShowPathFreeSpace(strPath);
 			}
