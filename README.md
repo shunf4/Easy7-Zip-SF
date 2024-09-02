@@ -1,4 +1,4 @@
-This is [Jame Hoo's Easy 7-Zip](http://www.e7z.org/) (Additional Ergonomic & Useful GUI Enhancements and Improvements) , rebased on [7-zip](https://7-zip.org)'s latest release [23.01](https://7-zip.org/a/7z2301-src.7z). This is based on [glachancecmaisonneuve's previous effort of rebasing it on 19.00](https://github.com/glachancecmaisonneuve/Easy7-Zip), though some original features from James Hoo are missing.
+This is [Jame Hoo's Easy 7-Zip](http://www.e7z.org/) (Additional Ergonomic & Useful GUI Enhancements and Improvements) , rebased on [7-zip](https://7-zip.org)'s newer release [23.01](https://7-zip.org/a/7z2301-src.7z). This is based on [glachancecmaisonneuve's previous effort of rebasing it on 19.00](https://github.com/glachancecmaisonneuve/Easy7-Zip), though some original features from James Hoo are missing.
 
 ### Download
 
@@ -8,6 +8,7 @@ If the artifact gets expired, you may need to manually trigger it again somehow.
 
 ### Related
 
+- https://www.7-zip.org/
 - http://www.e7z.org/
 - https://github.com/glachancecmaisonneuve/Easy7-Zip
 - https://github.com/treysis/Easy-7-Zip-ZS

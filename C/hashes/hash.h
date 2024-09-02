@@ -49,6 +49,11 @@
 typedef UInt32 uint32_t;
 #endif
 
+#if _MSC_VER >= 1914
+// Compiler will insert Spectre mitigation for memory load if /Qspectre switch specified
+#pragma warning(disable : 5045)
+#endif
+
 #ifndef uint64_t
 typedef UInt64 uint64_t;
 #endif
