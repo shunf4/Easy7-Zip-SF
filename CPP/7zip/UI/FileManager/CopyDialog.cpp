@@ -387,6 +387,9 @@ bool CCopyDialog::OnCommand(unsigned code, unsigned itemID, LPARAM lParam)
 		{
 			UString strPath;
 			_path.GetText(strPath);
+			if (isActuallyAppendingFilename) {
+				OnButtonAddFileName();	
+			}
 
 			ShowPathFreeSpace(strPath);
 			return true;
@@ -398,6 +401,9 @@ bool CCopyDialog::OnCommand(unsigned code, unsigned itemID, LPARAM lParam)
 			{
 				UString strPath;
 				_path.GetLBText(nSel, strPath);
+				if (isActuallyAppendingFilename) {
+					OnButtonAddFileName();	
+				}
 				ShowPathFreeSpace(strPath);
 			}
 			return true;
