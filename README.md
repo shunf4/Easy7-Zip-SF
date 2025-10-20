@@ -1,3 +1,6 @@
+> [!WARNING]  
+> The version of 7-Zip this repository is based on has multiple vulnerablities as of now, including [CVE-2025-55188](https://www.cve.org/CVERecord?id=CVE-2025-55188), [CVE-2023-52169](https://www.tenable.com/cve/CVE-2023-52169). This repository now HAS VULNERABILITIES and SHOULD NOT BE USED NOW, or your computer may face security risks.
+
 This is [Jame Hoo's Easy 7-Zip](http://www.e7z.org/) (Additional Ergonomic & Useful GUI Enhancements and Improvements) , rebased on [7-zip](https://7-zip.org)'s newer release [23.01](https://7-zip.org/a/7z2301-src.7z). This is based on [glachancecmaisonneuve's previous effort of rebasing it on 19.00](https://github.com/glachancecmaisonneuve/Easy7-Zip), though some original features from James Hoo are missing.
 
 ### Download
