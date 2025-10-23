@@ -2,9 +2,7 @@ This is [Jame Hoo's Easy 7-Zip](http://www.e7z.org/) (Additional Ergonomic & Use
 
 ### Download
 
-Go to [GitHub Actions](https://github.com/shunf4/Easy7-Zip-SF/actions) and download the artifact of the latest run.
-
-If the artifact gets expired, you may need to manually trigger it again somehow.
+[GitHub Actions](https://github.com/shunf4/Easy7-Zip-SF/actions) Artifact or [GitHub Release](https://github.com/shunf4/Easy7-Zip-SF/releases) .
 
 ### Related
 
