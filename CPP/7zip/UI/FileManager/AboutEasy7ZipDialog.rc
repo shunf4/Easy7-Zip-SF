@@ -12,5 +12,5 @@ CAPTION "About Easy 7-Zip"
   PUSHBUTTON  MY_EASY7ZIP_HOMEPAGE, IDC_ABOUT_BUTTON_EASY7ZIP_HOMEPAGE, bx2, by, bxs, bys
   LTEXT  MY_EASY7ZIP_7ZIP_VERSION, -1, m, m, xc, 8
   LTEXT  MY_EASY7ZIP_COPYRIGHT, -1, m, m + 8 + 4, xc, 8
-  LTEXT  "Easy 7-Zip is a free software made by James Hoo. The software was built based on 7-Zip 16.04.", -1, m, m + 8 + 4 + 8 + 12, xc, (yc - bys - 36)
+  LTEXT  "Easy 7-Zip is a free software made by James Hoo. The software was built based on 7-Zip.", -1, m, m + 8 + 4 + 8 + 12, xc, (yc - bys - 36)
 }
