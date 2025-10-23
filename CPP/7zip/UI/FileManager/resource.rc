@@ -157,6 +157,7 @@ BEGIN
   #endif
     MY_MENUITEM_SEPARATOR
   MENUITEM "&About 7-Zip...",               IDM_ABOUT
+  MENUITEM "&About Easy 7-Zip...",          IDM_ABOUT_EASY_7ZIP
   END
 END
 
@@ -270,6 +271,7 @@ BEGIN
 END
 
 #include "AboutDialog.rc"
+#include "AboutEasy7ZipDialog.rc"
 #include "BrowseDialog.rc"
 #include "BrowseDialog2.rc"
 #include "ComboDialog.rc"

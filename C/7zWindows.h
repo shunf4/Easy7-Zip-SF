@@ -12,12 +12,17 @@
 
 #if defined(_MSC_VER)
 
+// SF mod: https://developercommunity.visualstudio.com/t/warning-c5031-pragma-warningpop-likely-mismatch-po/387055
+// because my VS is old
+#pragma warning(disable:5031)
+#pragma warning(disable:5032)
+
 #pragma warning(push)
 #pragma warning(disable : 4668) // '_WIN32_WINNT' is not defined as a preprocessor macro, replacing with '0' for '#if/#elif'
 
 #if _MSC_VER == 1900
 // for old kit10 versions
-// #pragma warning(disable : 4255) // winuser.h(13979): warning C4255: 'GetThreadDpiAwarenessContext':
+#pragma warning(disable : 4255) // winuser.h(13979): warning C4255: 'GetThreadDpiAwarenessContext':
 #endif
 // win10 Windows Kit:
 #endif // _MSC_VER

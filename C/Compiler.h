@@ -137,6 +137,8 @@ typedef void (*Z7_void_Function)(void);
 #endif
 */
 
+#pragma warning(disable : 4255)
+
 #if _MSC_VER > 1200
 // -Wall warnings
 

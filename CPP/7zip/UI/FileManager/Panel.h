@@ -210,7 +210,7 @@ enum MyMessages
 };
 
 UString GetFolderPath(IFolderFolder *folder);
-
+void StartApplicationDontWait(const UString &dir, const UString &path, HWND window);
 class CPanel;
 
 class CMyListView Z7_final: public NWindows::NControl::CListView2
@@ -278,6 +278,7 @@ struct CCopyToOptions
   CByteBuffer ZoneBuf;
 
   UString folder;
+  Int64 soleFolderIndex;
 
   UStringVector hashMethods;
 
@@ -293,6 +294,7 @@ struct CCopyToOptions
       showErrorMessages(false),
       NeedRegistryZone(true),
       ZoneIdMode(NExtract::NZoneIdMode::kNone),
+      soleFolderIndex(-1LL),
       VirtFileSystemSpec(NULL)
       // , VirtFileSystem(NULL)
       {}
@@ -368,11 +370,11 @@ public:
   int _timestampLevel;
   UInt32 _listViewMode;
   int _xSize;
+  CAppState *_appState;
 private:
   int _startGroupSelect;
   int _prevFocusedItem;
 
-  CAppState *_appState;
 
   virtual bool OnCommand(unsigned code, unsigned itemID, LPARAM lParam, LRESULT &result) Z7_override;
   virtual LRESULT OnMessage(UINT message, WPARAM wParam, LPARAM lParam) Z7_override;
@@ -852,6 +854,7 @@ public:
   void MessageBox_LastError() const;
   void MessageBox_Error_LangID(UINT resourceID) const;
   void MessageBox_Error_UnsupportOperation() const;
+  void MessageBoxMyError(LPCWSTR message);
   // void MessageBoxErrorForUpdate(HRESULT errorCode, UINT resourceID);
 
 
@@ -974,7 +977,7 @@ public:
   void RefreshTitle(bool always = false) { _panelCallback->RefreshTitle(always);  }
   void RefreshTitleAlways() { RefreshTitle(true);  }
 
-  UString GetItemsInfoString(const CRecordVector<UInt32> &indices);
+  UString GetItemsInfoString(const CRecordVector<UInt32> &indices, int *soleDir, Int64 &soleFolderIndex);
 };
 
 

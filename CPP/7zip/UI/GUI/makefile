@@ -21,6 +21,7 @@ GUI_OBJS = \
   $O\UpdateCallbackGUI.obj \
   $O\UpdateCallbackGUI2.obj \
   $O\UpdateGUI.obj \
+  $O\ViewSettings.obj \
 
 COMMON_OBJS = \
   $O\CommandLineParser.obj \

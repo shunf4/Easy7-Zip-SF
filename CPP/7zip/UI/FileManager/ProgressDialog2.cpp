@@ -24,6 +24,7 @@ using namespace NWindows;
 
 extern HINSTANCE g_hInstance;
 extern bool g_DisableUserQuestions;
+bool g_bProcessError = false;
 
 static const UINT_PTR kTimerID = 3;
 

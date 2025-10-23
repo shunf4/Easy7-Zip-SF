@@ -1,6 +1,7 @@
 // PanelDrag.cpp
 
 #include "StdAfx.h"
+#include <windef.h>
 
 #ifdef UNDER_CE
 #include <winuserm.h>
@@ -345,9 +346,9 @@ enum Enum_CmdId
   k_Cancel        = 1,
   k_Copy_Base     = 2, // to fs
   k_Copy_ToArc    = 3,
-  k_AddToArc      = 4
-  /*
+  k_AddToArc      = 4,
   k_OpenArc       = 8,
+  /*
   k_TestArc       = 9,
   k_ExtractFiles  = 10,
   k_ExtractHere   = 11
@@ -372,7 +373,7 @@ static const CCmdLangPair g_Pairs[] =
   { k_Copy_Base  | k_MenuFlag_Move,  IDS_MOVE },
   { k_Copy_ToArc | k_MenuFlag_Copy,  IDS_COPY_TO },
   // { k_Copy_ToArc | k_MenuFlag_Move,  IDS_MOVE_TO }, // IDS_CONTEXT_COMPRESS_TO
-  // { k_OpenArc,      IDS_CONTEXT_OPEN },
+  { k_OpenArc,      IDS_CONTEXT_OPEN },
   // { k_ExtractFiles, IDS_CONTEXT_EXTRACT },
   // { k_ExtractHere,  IDS_CONTEXT_EXTRACT_HERE },
   // { k_TestArc,      IDS_CONTEXT_TEST },
@@ -409,6 +410,7 @@ class CDropTarget Z7_final:
 
   CPanel *m_Panel;
   bool m_IsAppTarget;        // true, if we want to drop to app window (not to panel)
+  bool m_IsPanelAddressComboBoxOrBar;
 
   bool m_TargetPath_WasSent_ToDataObject;           // true, if TargetPath was sent
   bool m_TargetPath_NonEmpty_WasSent_ToDataObject;  // true, if non-empty TargetPath was sent
@@ -554,6 +556,7 @@ public:
   CRecordVector<UInt32> Indices;
 
   UString SrcDirPrefix_Temp; // FS directory with source files or Temp
+  Int64 SoleFolderIndex;
   UString DestDirPrefix_FromTarget;
   /* destination Path that was sent by Target via SetData().
      it can be altstreams prefix.
@@ -633,6 +636,7 @@ void CDataObject::CopyFromPanelTo_Folder()
   {
     CCopyToOptions options;
     options.folder = SrcDirPrefix_Temp;
+    options.soleFolderIndex = SoleFolderIndex;
     /* 15.13: fixed problem with mouse cursor for password window.
        DoDragDrop() probably calls SetCapture() to some hidden window.
        But it's problem, if we show some modal window, like MessageBox.
@@ -1579,6 +1583,7 @@ void CPanel::OnDrag(LPNMLISTVIEW /* nmListView */, bool isRightButton)
     */
   }
 
+  Int64 soleFolderIndex = -1LL; // initially unset value
   {
     UStringVector names;
     // names variable is     USED for drag and drop from 7-zip to Explorer or to 7-zip archive folder.
@@ -1592,6 +1597,15 @@ void CPanel::OnDrag(LPNMLISTVIEW /* nmListView */, bool isRightButton)
       else
       {
         s = GetItemName(index);
+        if (IsItem_Folder(index)) {
+          if (i == 0) {
+            soleFolderIndex = (Int64)index;
+          } else {
+            soleFolderIndex = -1LL;
+          }
+        } else {
+          soleFolderIndex = -1LL;
+        }
         /*
         // We use (keepAndReplaceEmptyPrefixes = true) in CAgentFolder::Extract
         // So the following code is not required.
@@ -1620,6 +1634,7 @@ void CPanel::OnDrag(LPNMLISTVIEW /* nmListView */, bool isRightButton)
   dataObjectSpec->Panel = this;
   dataObjectSpec->Indices = indices;
   dataObjectSpec->SrcDirPrefix_Temp = dirPrefix;
+  dataObjectSpec->SoleFolderIndex = soleFolderIndex;
 
   dropSourceSpec->DataObjectSpec = dataObjectSpec;
   dropSourceSpec->DataObject = dataObjectSpec;
@@ -1742,6 +1757,10 @@ void CPanel::OnDrag(LPNMLISTVIEW /* nmListView */, bool isRightButton)
       }
     }
 
+    if (dataObjectSpec->m_Transfer.Target.Cmd_Type == NDragMenu::k_OpenArc) {
+      need_Process = false;
+    }
+
     if (need_Process)
       if (!dataObjectSpec->DestDirPrefix_FromTarget.IsEmpty())
       {
@@ -1757,6 +1776,7 @@ void CPanel::OnDrag(LPNMLISTVIEW /* nmListView */, bool isRightButton)
         */
         // options.moveMode = (moveIsAllowed && effect == DROPEFFECT_MOVE) // before v23.00:
         options.moveMode = moveIsAllowed;
+        options.soleFolderIndex = soleFolderIndex;
         if (moveIsAllowed)
         {
           if (dataObjectSpec->m_Transfer_WasSet)
@@ -1814,6 +1834,7 @@ CDropTarget::CDropTarget():
       // m_SubFolderIndex(-1),
       m_Panel(NULL),
       m_IsAppTarget(false),
+      m_IsPanelAddressComboBoxOrBar(false),
       m_TargetPath_WasSent_ToDataObject(false),
       m_TargetPath_NonEmpty_WasSent_ToDataObject(false),
       m_Transfer_WasSent_ToDataObject(false),
@@ -1846,6 +1867,7 @@ void CDropTarget::ClearState()
   // m_DropHighlighted_SubFolderName.Empty();
   m_Panel = NULL;
   m_IsAppTarget = false;
+  m_IsPanelAddressComboBoxOrBar = false;
   m_TargetPath_WasSent_ToDataObject = false;
   m_TargetPath_NonEmpty_WasSent_ToDataObject = false;
   m_Transfer_WasSent_ToDataObject = false;
@@ -1931,6 +1953,7 @@ void CDropTarget::PositionCursor(const POINTL &ptl)
   // m_SubFolderIndex = -1;
   // m_DropHighlighted_SubFolderName.Empty();
   m_IsAppTarget = true;
+  m_IsPanelAddressComboBoxOrBar = false;
   m_Panel = NULL;
   m_PanelDropIsAllowed = false;
 
@@ -1953,8 +1976,22 @@ void CDropTarget::PositionCursor(const POINTL &ptl)
           {
             m_Panel = panel;
             m_IsAppTarget = false;
-            if ((int)i == SrcPanelIndex)
+
+            POINT pt3 = pt;
+            if (panel->ScreenToClient(&pt3)) {
+              HWND x = ::ChildWindowFromPointEx((HWND)*panel, pt3,
+                CWP_SKIPINVISIBLE | CWP_SKIPDISABLED);
+              if (x == (HWND)(panel->_headerToolBar)
+                || x == (HWND)(panel->_headerReBar)
+                || x == (HWND)(panel->_headerComboBox)
+              ) {
+                m_IsPanelAddressComboBoxOrBar = true;
+              }
+            }
+
+            if ((int)i == SrcPanelIndex && !m_IsPanelAddressComboBoxOrBar)
               return; // we don't allow to drop to source panel
+            
             break;
           }
         }
@@ -2556,6 +2593,10 @@ Z7_COMWF_B CDropTarget::Drop(IDataObject *dataObject, DWORD keyState,
     opEffect = GetEffect(keyState, pt, *effect);
     if (m_IsAppTarget)
       cmd = NDragMenu::k_AddToArc;
+    else if (m_Panel && m_IsPanelAddressComboBoxOrBar)
+    {
+      cmd = NDragMenu::k_OpenArc;
+    }
     else if (m_Panel)
     {
       if (IsFsFolderPath())
@@ -2657,6 +2698,12 @@ Z7_COMWF_B CDropTarget::Drop(IDataObject *dataObject, DWORD keyState,
     opEffect = DROPEFFECT_NONE;
     cmdEffect = DROPEFFECT_NONE;
   }
+  else if (cmd == NDragMenu::k_OpenArc)
+  {
+    if (m_SourcePaths.Size() > 0) {
+      m_Panel->BindToPathAndRefresh(m_SourcePaths.Front());
+    }
+  }
   else
   {
     if (m_GetTransfer_WasSuccess)
@@ -2728,13 +2775,16 @@ Z7_COMWF_B CDropTarget::Drop(IDataObject *dataObject, DWORD keyState,
     // res = SendToSource_UInt32(dataObject, RegisterClipboardFormat(CFSTR_LOGICALPERFORMEDDROPEFFECT), DROPEFFECT_MOVE); // for debug
     /* res = */ SendToSource_UInt32(dataObject,
         RegisterClipboardFormat(CFSTR_PERFORMEDDROPEFFECT),
-        cmd == NDragMenu::k_Cancel ? DROPEFFECT_NONE : DROPEFFECT_COPY);
+        ((cmd == NDragMenu::k_Cancel) || (cmd == NDragMenu::k_OpenArc)) ? DROPEFFECT_NONE : DROPEFFECT_COPY);
     // res = res;
   }
   RemoveSelection();
 
   target.FuncType = k_DragTargetMode_Drop_End;
   target.Cmd_Type = cmd;
+  if (cmd == NDragMenu::k_OpenArc) {
+    needDrop_by_Source = false;
+  }
   if (needDrop_by_Source)
     target.Flags |= k_TargetFlags_MustBeProcessedBySource;
 

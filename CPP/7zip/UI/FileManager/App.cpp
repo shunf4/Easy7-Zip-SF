@@ -38,6 +38,7 @@ using namespace NName;
 extern HINSTANCE g_hInstance;
 
 #define kTempDirPrefix FTEXT("7zE")
+extern bool g_bProcessError;
 
 void CPanelCallbackImp::OnTab()
 {
@@ -281,6 +282,9 @@ void CApp::SaveToolbarChanges()
 }
 
 
+void MyLoadMenu();
+
+
 HRESULT CApp::Create(HWND hwnd, const UString &mainPath, const UString &arcFormat, int xSizes[2], bool needOpenArc, COpenResult &openRes)
 {
   _window.Attach(hwnd);
@@ -353,6 +357,11 @@ HRESULT CApp::Create(HWND hwnd, const UString &mainPath, const UString &arcForma
   
   SetFocusedPanel(LastFocusedPanel);
   Panels[LastFocusedPanel].SetFocusToList();
+
+  if (pDelayedOpenFolderAfterExtractPathCriticalSection == NULL) {
+    pDelayedOpenFolderAfterExtractPathCriticalSection = new NWindows::NSynchronization::CCriticalSection();
+  }
+
   return S_OK;
 }
 
@@ -497,26 +506,38 @@ static void AddPropValueToSum(IFolderFolder *folder, UInt32 index, PROPID propID
     sum = (UInt64)(Int64)-1;
 }
 
-UString CPanel::GetItemsInfoString(const CRecordVector<UInt32> &indices)
+UString CPanel::GetItemsInfoString(const CRecordVector<UInt32> &indices, int *soleDir, Int64 &soleFolderIndex)
 {
   UString info;
   UInt64 numDirs, numFiles, filesSize, foldersSize;
   numDirs = numFiles = filesSize = foldersSize = 0;
   
   unsigned i;
+  *soleDir = 0;
   for (i = 0; i < indices.Size(); i++)
   {
     const UInt32 index = indices[i];
     if (IsItem_Folder(index))
     {
+      if (i == 0) {
+        *soleDir = 1;
+        soleFolderIndex = (Int64)index;
+      } else {
+        *soleDir = 0;
+      }
       AddPropValueToSum(_folder, index, kpidSize, foldersSize);
       numDirs++;
     }
     else
     {
+      *soleDir = 0;
       AddPropValueToSum(_folder, index, kpidSize, filesSize);
       numFiles++;
     }
+  }
+
+  if ((*soleDir) != 1) {
+    soleFolderIndex = -1LL;
   }
 
   AddValuePair2(info, IDS_PROP_FOLDERS, numDirs, foldersSize);
@@ -548,6 +569,12 @@ UString CPanel::GetItemsInfoString(const CRecordVector<UInt32> &indices)
 
 bool IsCorrectFsName(const UString &name);
 
+static bool IsDirectory(LPCWSTR lpszPathFile)
+{
+	DWORD	dwAttr;
+	dwAttr = GetFileAttributesW(lpszPathFile);
+	return (dwAttr != (DWORD)-1) && ((dwAttr & FILE_ATTRIBUTE_DIRECTORY) != 0);
+}
 
 
 /* Returns true, if path is path that can be used as path for File System functions
@@ -584,6 +611,10 @@ void CApp::OnCopy(bool move, bool copyToSame, unsigned srcPanelIndex)
 
   CRecordVector<UInt32> indices;
   UString destPath;
+  UString destPathBeforeAppendingFilename;
+  bool openOutputFolder;
+  bool deleteSourceFile;
+  bool close7Zip;
   bool useDestPanel = false;
 
   {
@@ -614,6 +645,8 @@ void CApp::OnCopy(bool move, bool copyToSame, unsigned srcPanelIndex)
   
   const bool useFullItemPaths = srcPanel.Is_IO_FS_Folder(); // maybe we need flat also here ??
 
+  Int64 soleFolderIndex = -1LL; // initially unset value
+
   {
     CCopyDialog copyDialog;
 
@@ -621,12 +654,18 @@ void CApp::OnCopy(bool move, bool copyToSame, unsigned srcPanelIndex)
     copyDialog.Value = destPath;
     LangString(move ? IDS_MOVE : IDS_COPY, copyDialog.Title);
     LangString(move ? IDS_MOVE_TO : IDS_COPY_TO, copyDialog.Static);
-    copyDialog.Info = srcPanel.GetItemsInfoString(indices);
+    copyDialog.Info = srcPanel.GetItemsInfoString(indices, &copyDialog.soleDir, soleFolderIndex);
+	copyDialog.m_currentFolderPrefix = srcPanel._currentFolderPrefix;
 
     if (copyDialog.Create(srcPanel.GetParent()) != IDOK)
       return;
 
+	openOutputFolder = copyDialog.m_bOpenOutputFolder;
+	deleteSourceFile = copyDialog.m_bDeleteSourceFile;
+	close7Zip = copyDialog.m_bClose7Zip;
+
     destPath = copyDialog.Value;
+    destPathBeforeAppendingFilename = copyDialog.isActuallyAppendingFilename ? copyDialog.ValueBeforeAppendingFilename : destPath;
   }
 
   {
@@ -719,7 +758,7 @@ void CApp::OnCopy(bool move, bool copyToSame, unsigned srcPanelIndex)
             UString name = destPath.Ptr(pos + 1);
             if (name.Find(L':') >= 0)
             {
-              srcPanel.MessageBox_Error_UnsupportOperation();
+              srcPanel.MessageBoxErrorLang(IDS_OPERATION_IS_NOT_SUPPORTED);
               return;
             }
             #endif
@@ -751,11 +790,13 @@ void CApp::OnCopy(bool move, bool copyToSame, unsigned srcPanelIndex)
     if (!destIsFsPath)
       useDestPanel = true;
 
-    AddUniqueStringToHeadOfList(copyFolders, destPath);
+    AddUniqueStringToHeadOfList(copyFolders, destPathBeforeAppendingFilename);
     while (copyFolders.Size() > 20)
       copyFolders.DeleteBack();
     SaveCopyHistory(copyFolders);
   }
+
+  g_bProcessError = false;
 
   bool useSrcPanel = !useDestPanel || !srcPanel.Is_IO_FS_Folder();
 
@@ -794,6 +835,7 @@ void CApp::OnCopy(bool move, bool copyToSame, unsigned srcPanelIndex)
     options.includeAltStreams = true;
     options.replaceAltStreamChars = false;
     options.showErrorMessages = true;
+    options.soleFolderIndex = soleFolderIndex;
 
     result = srcPanel.CopyTo(options, indices, NULL);
   }
@@ -853,6 +895,102 @@ void CApp::OnCopy(bool move, bool copyToSame, unsigned srcPanelIndex)
   disableNotify1.Restore();
   disableNotify2.Restore();
   srcPanel.SetFocusToList();
+
+  if (!g_bProcessError && result == S_OK)
+  {
+	  if (openOutputFolder)
+	  {
+      bool done = false;
+      if (!done && soleFolderIndex != -1LL) {
+        UString soleFolderName = srcPanel.GetItemRelPath((UInt32)soleFolderIndex);
+        if (soleFolderName.Len() > 0 && (soleFolderName[0] == L'\\' || soleFolderName[0] == L'/' || soleFolderName[0] == '\\' || soleFolderName[0] == '/')) {
+          soleFolderName = soleFolderName.Mid(1, soleFolderName.Len() - 1);
+        }
+        if (soleFolderName.Len() > 0 && (soleFolderName.Back() == L'\\' || soleFolderName.Back() == L'/' || soleFolderName.Back() == '\\' || soleFolderName.Back() == '/')) {
+          soleFolderName.DeleteBack();
+        }
+        UString destPathWithSoleFolder = destPath;
+        destPathWithSoleFolder += L'\\';
+        destPathWithSoleFolder += soleFolderName;
+        if (IsDirectory(destPathWithSoleFolder)) {
+          done = true;
+          if (close7Zip)
+          {
+            StartApplicationDontWait(destPathWithSoleFolder, destPathWithSoleFolder, (HWND)_window);
+          } else {
+            {
+              NWindows::NSynchronization::CCriticalSectionLock lock(*pDelayedOpenFolderAfterExtractPathCriticalSection);
+              DelayedOpenFolderAfterExtractPath = destPathWithSoleFolder;
+            }
+            _window.SetTimer(1678, 800);
+          }
+        }
+      }
+      
+      if (!done) {
+        if (IsDirectory(destPath)) {
+          if (close7Zip)
+          {
+            StartApplicationDontWait(destPath, destPath, (HWND)_window);
+          } else {
+            {
+              NWindows::NSynchronization::CCriticalSectionLock lock(*pDelayedOpenFolderAfterExtractPathCriticalSection);
+              DelayedOpenFolderAfterExtractPath = destPath;
+            }
+            _window.SetTimer(1678, 800);
+          }
+        }
+      }
+	  }
+	  if (deleteSourceFile)
+	  {
+		  DWORD	dwAttr;
+
+		  UString srcFilePath(srcPanel._currentFolderPrefix);
+		  srcPanel.OpenParentFolder();
+
+		  while (!srcFilePath.IsEmpty())
+		  {
+			  if (srcFilePath.Back() == '\\')
+			  {
+				  srcFilePath.DeleteBack();
+			  }
+			  dwAttr = GetFileAttributesW(srcFilePath);
+
+			  if (dwAttr == INVALID_FILE_ATTRIBUTES)
+			  {
+				  int n = srcFilePath.ReverseFind(L'\\');
+				  if (n != -1)
+				  {
+					  srcPanel.OpenParentFolder();
+					  srcFilePath.ReleaseBuf_SetEnd(n);
+				  }
+				  else
+				  {
+					  break;
+				  }
+			  }
+			  else if (dwAttr & FILE_ATTRIBUTE_ARCHIVE)
+			  {
+				  if (dwAttr & FILE_ATTRIBUTE_READONLY)
+				  {
+					  dwAttr &= (~FILE_ATTRIBUTE_READONLY);
+					  SetFileAttributesW(srcFilePath, dwAttr);
+				  }
+				  ::DeleteFileW(srcFilePath);
+				  break;
+			  }
+			  else //if (dwAttr & FILE_ATTRIBUTE_DIRECTORY)
+			  {
+				  break;
+			  }
+		  } // while
+	  }
+	  if (close7Zip)
+	  {
+        PostMessage (_window, WM_CLOSE, 0, 0);
+	  }
+  }
 }
 
 void CApp::OnSetSameFolder(unsigned srcPanelIndex)

@@ -109,6 +109,8 @@ public:
 
   void LoadItems(IShellItemArray *psiItemArray);
 
+  HRESULT InitContextMenu(const wchar_t *folder, const wchar_t * const *names, unsigned numFiles);
+
   CZipContextMenu();
   ~CZipContextMenu();
 

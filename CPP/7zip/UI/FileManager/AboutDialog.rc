@@ -5,7 +5,7 @@
 #define xc 144
 #define yc 144
 
-#define y 93
+#define y (93+24)
 
 IDI_LOGO ICON "../../UI/FileManager/7zipLogo.ico"
 
@@ -21,6 +21,6 @@ CAPTION "About 7-Zip"
   ICON   IDI_LOGO, -1, m, m, 32, 32, SS_REALSIZEIMAGE
   LTEXT  "", IDT_ABOUT_VERSION, m, 54, xc, 8
   LTEXT  "", IDT_ABOUT_DATE, m, 67, xc, 8
-  LTEXT  MY_COPYRIGHT, -1, m, 80, xc, 8
+  LTEXT  MY_COPYRIGHT" Easy7-Zip-SF (Jame Hoo's Easy 7-Zip; glachancecmaisonneuve and shunf4 renovated)", -1, m, 80, xc, 32
   LTEXT  "7-Zip is free software", IDT_ABOUT_INFO, m, y, xc, (by - y - 1)
 }

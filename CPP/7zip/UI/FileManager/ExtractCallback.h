@@ -286,6 +286,8 @@ public:
   UInt64 NumFiles;
 #endif
 
+  Int64 SoleFolderIndex;
+
 #ifndef Z7_NO_CRYPTO
   UString Password;
 #endif
@@ -317,6 +319,7 @@ public:
     , OverwriteMode(NExtract::NOverwriteMode::kAsk)
 #ifndef Z7_SFX
     , _hashCalc(NULL)
+    , SoleFolderIndex(-1LL)
 #endif
     {}
    

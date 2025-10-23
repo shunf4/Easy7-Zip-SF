@@ -301,7 +301,8 @@ CArchiveExtractCallback::CArchiveExtractCallback():
     // Write_MTime(true),
     Is_elimPrefix_Mode(false),
     _arc(NULL),
-    _multiArchives(false)
+    _multiArchives(false),
+    SoleFolderIndex(-1LL)
 {
   #ifdef Z7_USE_SECURITY_CODE
   _saclEnabled = InitLocalPrivileges();
@@ -395,6 +396,8 @@ void CArchiveExtractCallback::Init(
     NDir::MyGetFullPathName(directoryPath, _dirPathPrefix_Full);
     NName::NormalizeDirPathPrefix(_dirPathPrefix_Full);
   }
+
+  SoleFolderIndex = -1LL;
 }
 
 
@@ -1165,7 +1168,7 @@ void CArchiveExtractCallback::CreateFolders()
   CDirPathTime pt;
   GetFiTimesCAM(_fi, pt, *_arc);
  
-  if (pt.IsSomeTimeDefined())
+  if (pt.IsSomeTimeDefined() && _index != SoleFolderIndex)
   {
     pt.Path = fullPathNew;
     pt.SetDirTime_to_FS_2();

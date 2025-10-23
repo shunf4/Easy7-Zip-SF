@@ -12,6 +12,7 @@
 #include "../Common/CompressCall.h"
 
 #include "AboutDialog.h"
+#include "AboutEasy7ZipDialog.h"
 #include "App.h"
 #include "BrowseDialog2.h"
 #include "HelpUtils.h"
@@ -937,6 +938,13 @@ bool OnMenuCommand(HWND hWnd, unsigned id)
         panel.BindToPathAndRefresh(tempPathF);
       */
       MyBrowseForTempFolder(g_HWND);
+      break;
+    }
+
+    case IDM_ABOUT_EASY_7ZIP:
+    {
+      CAboutEasy7ZipDialog dialog;
+      dialog.Create(hWnd);
       break;
     }
 

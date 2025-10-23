@@ -49,8 +49,12 @@ Z7_COM7F_IMF(CAgentFolder::CopyTo(Int32 moveMode, const UInt32 *indices, UInt32 
       NExtract::NPathMode::kNoPathsAlt :
       NExtract::NPathMode::kNoPaths;
 
+  Int64 soleFolderIndex;
+  callback->GetSoleFolderIndex(&soleFolderIndex);
+
   return Extract(indices, numItems,
       includeAltStreams, replaceAltStreamCharsMode,
+      soleFolderIndex,
       pathMode, NExtract::NOverwriteMode::kAsk,
       path, BoolToInt(false), extractCallback2);
   COM_TRY_END

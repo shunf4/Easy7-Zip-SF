@@ -115,16 +115,21 @@ HRESULT CPanelCopyThread::ProcessVirt()
     result2 = archiveFolder->Extract(Indices.ConstData(), Indices.Size(),
         BoolToInt(options->includeAltStreams),
         BoolToInt(options->replaceAltStreamChars),
+        -1LL,
         pathMode, NExtract::NOverwriteMode::kAsk,
         options->folder, BoolToInt(true), extractCallback2);
   }
-  else
+  else {
+    // CMyComPtr<IFolderArchiveExtractCallback> extractCallback2;
+    // RINOK(ExtractCallback.QueryInterface(IID_IFolderArchiveExtractCallback, &extractCallback2))
+    ExtractCallback->SetSoleFolderIndex(options->soleFolderIndex);
     result2 = FolderOperations->CopyTo(
       BoolToInt(options->moveMode),
       Indices.ConstData(), Indices.Size(),
       BoolToInt(options->includeAltStreams),
       BoolToInt(options->replaceAltStreamChars),
       options->folder, ExtractCallback);
+  }
 
   if (result2 == S_OK && !ExtractCallbackSpec->ThereAreMessageErrors)
   {
