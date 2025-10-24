@@ -102,6 +102,7 @@ int CALLBACK PropSheetProc(HWND hwndDlg, UINT uMsg, LPARAM lParam)
       {
         SendMessage(hTab, WM_SETFONT, (WPARAM)g_hModernFont, TRUE);
       }
+      (void)lParam;
     }
     break;
   }
