@@ -2,7 +2,7 @@
 
 #include "StdAfx.h"
 #include <prsht.h>
-#include <comctl32.h>
+#include <commctrl.h>
 
 #ifndef _UNICODE
 #include "../../Common/StringConvert.h"
