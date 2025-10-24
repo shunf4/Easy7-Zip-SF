@@ -89,13 +89,6 @@ int CALLBACK PropSheetProc(HWND hwndDlg, UINT uMsg, LPARAM lParam)
       // Use Segoe UI if available, otherwise fall back to system message font
       g_hModernFont = CreateFontIndirectW(&ncm.lfMessageFont);
       
-      // force Segoe UI specifically:
-      LOGFONTW lf = {0};
-      lf.lfHeight = -14;
-      lf.lfWeight = FW_NORMAL;
-      wcscpy_s(lf.lfFaceName, LF_FACESIZE, L"Segoe UI");
-      g_hModernFont = CreateFontIndirectW(&lf);
-      
       // Set font for tab control
       HWND hTab = GetDlgItem(hwndDlg, 12320); // IDC_TABCONTROL, Magic number for tab control
       if (hTab && g_hModernFont)
