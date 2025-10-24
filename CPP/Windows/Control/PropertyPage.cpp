@@ -97,7 +97,7 @@ int CALLBACK PropSheetProc(HWND hwndDlg, UINT uMsg, LPARAM lParam)
       g_hModernFont = CreateFontIndirectW(&lf);
       
       // Set font for tab control
-      HWND hTab = GetDlgItem(hwndDlg, IDC_TABCONTROL);
+      HWND hTab = GetDlgItem(hwndDlg, 12320); // IDC_TABCONTROL, Magic number for tab control
       if (hTab && g_hModernFont)
       {
         SendMessage(hTab, WM_SETFONT, (WPARAM)g_hModernFont, TRUE);
