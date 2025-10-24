@@ -86,9 +86,11 @@ int CALLBACK PropSheetProc(HWND hwndDlg, UINT uMsg, LPARAM lParam)
       NONCLIENTMETRICSW ncm = { sizeof(ncm) };
       SystemParametersInfoW(SPI_GETNONCLIENTMETRICS, sizeof(ncm), &ncm, 0);
       
-      // Use Segoe UI if available, otherwise fall back to system message font
-      g_hModernFont = CreateFontIndirectW(&ncm.lfMessageFont);
-      
+      if (!g_hModernFont) {
+        // Use Segoe UI if available, otherwise fall back to system message font
+        g_hModernFont = CreateFontIndirectW(&ncm.lfMessageFont);
+      }
+
       // Set font for tab control
       HWND hTab = GetDlgItem(hwndDlg, 12320); // IDC_TABCONTROL, Magic number for tab control
       if (hTab && g_hModernFont)
