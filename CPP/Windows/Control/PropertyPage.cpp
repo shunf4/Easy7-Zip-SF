@@ -1,6 +1,8 @@
 // Windows/Control/PropertyPage.cpp
 
 #include "StdAfx.h"
+#include <prsht.h>
+#include <comctl32.h>
 
 #ifndef _UNICODE
 #include "../../Common/StringConvert.h"
@@ -71,6 +73,8 @@ PROPSHEETHEADER fields depend from
 #define my_compatib_PROPSHEETPAGEW PROPSHEETPAGEW
 #endif
 
+// Global font handle
+HFONT g_hModernFont = NULL;
 // Property sheet callback function
 int CALLBACK PropSheetProc(HWND hwndDlg, UINT uMsg, LPARAM lParam)
 {
