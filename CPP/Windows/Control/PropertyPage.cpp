@@ -71,6 +71,40 @@ PROPSHEETHEADER fields depend from
 #define my_compatib_PROPSHEETPAGEW PROPSHEETPAGEW
 #endif
 
+// Property sheet callback function
+int CALLBACK PropSheetProc(HWND hwndDlg, UINT uMsg, LPARAM lParam)
+{
+  switch (uMsg)
+  {
+  case PSCB_INITIALIZED:
+    {
+      // Create modern font
+      NONCLIENTMETRICSW ncm = { sizeof(ncm) };
+      SystemParametersInfoW(SPI_GETNONCLIENTMETRICS, sizeof(ncm), &ncm, 0);
+      
+      // Use Segoe UI if available, otherwise fall back to system message font
+      g_hModernFont = CreateFontIndirectW(&ncm.lfMessageFont);
+      
+      // If you want to force Segoe UI specifically:
+      LOGFONTW lf = {0};
+      lf.lfHeight = -9;
+      lf.lfWeight = FW_NORMAL;
+      wcscpy_s(lf.lfFaceName, LF_FACESIZE, L"Segoe UI");
+      g_hModernFont = CreateFontIndirectW(&lf);
+      
+      // Set font for tab control
+      HWND hTab = GetDlgItem(hwndDlg, IDC_TABCONTROL);
+      if (hTab && g_hModernFont)
+      {
+        SendMessage(hTab, WM_SETFONT, (WPARAM)g_hModernFont, TRUE);
+      }
+    }
+    break;
+  }
+  return 0;
+}
+
+
 INT_PTR MyPropertySheet(const CObjectVector<CPageInfo> &pagesInfo, HWND hwndParent, const UString &title)
 {
   unsigned i;
@@ -150,14 +184,14 @@ INT_PTR MyPropertySheet(const CObjectVector<CPageInfo> &pagesInfo, HWND hwndPare
   {
     PROPSHEETHEADERW sheet;
     sheet.dwSize = sizeof(sheet);
-    sheet.dwFlags = PSH_PROPSHEETPAGE;
+    sheet.dwFlags = PSH_PROPSHEETPAGE | PSH_USECALLBACK;
     sheet.hwndParent = hwndParent;
     sheet.hInstance = g_hInstance;
     sheet.pszCaption = title;
     sheet.nPages = pagesW.Size();
     sheet.nStartPage = 0;
     sheet.ppsp = (LPCPROPSHEETPAGEW)(const void *)pagesW.ConstData();
-    sheet.pfnCallback = NULL;
+    sheet.pfnCallback = PropSheetProc;
     return ::PropertySheetW(&sheet);
   }
 }
