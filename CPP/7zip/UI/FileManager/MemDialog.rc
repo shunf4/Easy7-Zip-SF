@@ -13,7 +13,7 @@
 #define xg  (m + m)
 #define yg  (spin_y + 20)
 
-IDD_MEM DIALOG MY_MODAL_DIALOG_POSTFIX
+IDD_MEM DIALOGEX MY_MODAL_DIALOG_POSTFIX
 CAPTION "Memory usage request"
 BEGIN
   LTEXT   "", IDT_MEM_MESSAGE, m, m, xc, info_y_size, SS_NOPREFIX

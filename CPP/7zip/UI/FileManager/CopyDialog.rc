@@ -6,7 +6,7 @@
 //
 //#define y 40
 //
-//IDD_COPY  DIALOG  0, 0, xs, ys  MY_MODAL_RESIZE_DIALOG_STYLE  MY_FONT
+//IDD_COPY  DIALOGEX  0, 0, xs, ys  MY_MODAL_RESIZE_DIALOG_STYLE  MY_FONT
 //CAPTION "Copy"
 //{
 //  LTEXT       "",    IDT_COPY, m, m, xc, 8
@@ -52,7 +52,7 @@
 #define INFO_Y (AFTER_EXTRACTION_Y + 27 + 4)
 #define INFO_YS (by - m - 12 - 15 - 12 - 27 - 4 - 1)
 
-IDD_COPY  DIALOG  0, 0, xs, ys  MY_MODAL_RESIZE_DIALOG_STYLE  MY_FONT
+IDD_COPY  DIALOGEX  0, 0, xs, ys  MY_MODAL_RESIZE_DIALOG_STYLE  MY_FONT
 CAPTION "Copy"
 {
   LTEXT       "",    IDT_COPY,   m, m, xc, 9

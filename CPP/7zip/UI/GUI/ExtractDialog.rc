@@ -32,7 +32,7 @@
 #define GROUP_Y_SIZE 56
 #endif
 
-IDD_EXTRACT  DIALOG  0, 0, xs, ys  MY_MODAL_DIALOG_STYLE  MY_FONT
+IDD_EXTRACT  DIALOGEX  0, 0, xs, ys  MY_MODAL_DIALOG_STYLE  MY_FONT
 CAPTION "Extract"
 BEGIN
   LTEXT     "E&xtract to:", IDT_EXTRACT_EXTRACT_TO, m, m, xc, 8
@@ -88,7 +88,7 @@ END
 
 #define g1xs 64
 
-IDD_EXTRACT_2  DIALOG  0, 0, xs, ys  MY_MODAL_DIALOG_STYLE  MY_FONT
+IDD_EXTRACT_2  DIALOGEX  0, 0, xs, ys  MY_MODAL_DIALOG_STYLE  MY_FONT
 CAPTION "Extract"
 BEGIN
   LTEXT     "E&xtract to:", IDT_EXTRACT_EXTRACT_TO, m, m, xc - bxsDots - 8, 8

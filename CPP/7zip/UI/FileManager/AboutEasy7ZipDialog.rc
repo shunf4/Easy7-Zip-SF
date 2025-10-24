@@ -5,7 +5,7 @@
 #define xc 165
 #define yc 85
 
-IDD_ABOUT_EASY_7ZIP DIALOG 0, 0, xs, ys  MY_MODAL_DIALOG_STYLE  MY_FONT
+IDD_ABOUT_EASY_7ZIP DIALOGEX 0, 0, xs, ys  MY_MODAL_DIALOG_STYLE  MY_FONT
 CAPTION "About Easy 7-Zip"
 {
   DEFPUSHBUTTON  "OK", IDOK, bx1, by, bxs, bys

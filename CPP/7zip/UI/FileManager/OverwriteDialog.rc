@@ -18,7 +18,7 @@
 #undef bx1
 #define bx1 (xs - m - bSizeBig)
 
-IDD_OVERWRITE  DIALOG  0, 0, xs, ys  MY_MODAL_DIALOG_STYLE  MY_FONT
+IDD_OVERWRITE  DIALOGEX  0, 0, xs, ys  MY_MODAL_DIALOG_STYLE  MY_FONT
 CAPTION "Confirm File Replace"
 BEGIN
   LTEXT  "Destination folder already contains processed file.", IDT_OVERWRITE_HEADER, m, 7, xc, 8
@@ -63,7 +63,7 @@ END
 
 #define bx1 (xs - m - bxs)
 
-IDD_OVERWRITE_2  DIALOG  0, 0, xs, ys  MY_MODAL_DIALOG_STYLE  MY_FONT
+IDD_OVERWRITE_2  DIALOGEX  0, 0, xs, ys  MY_MODAL_DIALOG_STYLE  MY_FONT
 CAPTION "Confirm File Replace"
 BEGIN
   LTEXT  "Would you like to replace the existing file", IDT_OVERWRITE_QUESTION_BEGIN, m, m, xc, 8

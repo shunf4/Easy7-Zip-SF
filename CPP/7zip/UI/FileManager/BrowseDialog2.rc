@@ -9,7 +9,7 @@
 
 #define k_BROWSE2_y_List  40
 
-IDD_BROWSE2  DIALOG 0, 0, xs, ys  MY_MODAL_RESIZE_DIALOG_STYLE  MY_FONT
+IDD_BROWSE2  DIALOGEX 0, 0, xs, ys  MY_MODAL_RESIZE_DIALOG_STYLE  MY_FONT
 CAPTION "7-Zip: Browse Temp Files"
 {
 //  EDITTEXT  IDE_BROWSE_PATH,   m, by - m - k_BROWSE_y_CtrlSize - k_BROWSE_y_CtrlSize - m, xc, k_BROWSE_y_CtrlSize, ES_AUTOHSCROLL

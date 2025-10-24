@@ -6,7 +6,7 @@
 
 #define y 32
 
-IDD_LANG  DIALOG  MY_PAGE_POSTFIX
+IDD_LANG  DIALOGEX  MY_PAGE_POSTFIX
 CAPTION "Language"
 {
   LTEXT     "Language:", IDT_LANG_LANG, m, m, xc, 8
