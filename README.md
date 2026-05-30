@@ -14,6 +14,7 @@ This is [Jame Hoo's Easy 7-Zip](http://www.e7z.org/) (Additional Ergonomic & Use
 - https://github.com/treysis/Easy-7-Zip-ZS
 - https://github.com/mcmilk/7-Zip-zstd/pull/186
 - https://github.com/mcmilk/7-Zip-zstd/issues/262
+- https://github.com/ip7z/7zip (Official GitHub mirror)
 
 ### DevNote
 
