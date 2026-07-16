@@ -24,7 +24,7 @@ jobs:
 
       - name: Build project
         shell: cmd
-        run: ${{ '"C:\Program Files\Microsoft Visual Studio\2026\Enterprise\VC\Auxiliary\Build\vcvars64.bat" && build.cmd' }}
+        run: ${{ '"C:\Program Files\Microsoft Visual Studio\18\Enterprise\VC\Auxiliary\Build\vcvars64.bat" && build.cmd' }}
 
       - name: Download and unpack Lang
         shell: cmd
