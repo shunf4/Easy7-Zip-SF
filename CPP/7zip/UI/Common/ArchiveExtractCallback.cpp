@@ -1845,6 +1845,11 @@ Z7_COM7F_IMF(CArchiveExtractCallback::GetStream(UInt32 index, ISequentialOutStre
       outStreamLoc = new CStdOutFileStream;
     else
     {
+      if (_isSplit)
+      {
+        RINOK(PrepareOperation(askExtractMode))
+        return SetOperationResult(NArchive::NExtract::NOperationResult::kUnsupportedMethod);
+      }
       bool needExit = true;
       RINOK(GetExtractStream(outStreamLoc, needExit))
       if (needExit)
@@ -2677,6 +2682,7 @@ Z7_COM7F_IMF(CArchiveExtractCallback::SetOperationResult(Int32 opRes))
 {
   COM_TRY_BEGIN
 
+  // if (_isSplit) opRes = NArchive::NExtract::NOperationResult::kUnsupportedMethod;
   // printf("\nCArchiveExtractCallback::SetOperationResult: %d %s\n", opRes, GetAnsiString(_diskFilePath));
 
   #ifndef Z7_SFX
